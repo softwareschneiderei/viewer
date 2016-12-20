@@ -1,3 +1,4 @@
+#pragma once
 #include <cadef.h>
 #include <string>
 
@@ -14,6 +15,21 @@ public:
 
 
     void array_get(chtype type, unsigned long count, void* pValue);
+    void put(chtype type, void* value);
+    void get(chtype type, void* value);
+
+    template <class T>
+    T get()
+    {
+        T value;
+        get(value);
+        return value;
+    }
+
+    void get(int& value);
+    void put(int value);
+
+    bool is_connected() const;
 
     static void wait(double time);
 

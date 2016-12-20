@@ -2,6 +2,7 @@
 #include <QMainWindow>
 #include <memory>
 #include "ImagePoller.h"
+#include <QLabel>
 
 namespace Ui {
 class Viewer;
@@ -18,7 +19,10 @@ public:
     ~Viewer();
 
 private:
+    void updateImage(ImagePoller::Result result);
+
     std::unique_ptr<Ui::Viewer> mUi;
     ImagePoller mPoller;
+    QLabel* mImageStatsLabel;
 };
 

@@ -1,20 +1,39 @@
 #include <cadef.h>
 #include <db_access.h>
 #include <iostream>
-#include "Channel.h"
+#include "Device.h"
 #include <vector>
 #include <numeric>
+#include <thread>
 
 
+void start(std::string const& prefix)
+{
+    Device device(prefix);
+    device.put("SERIALNR", 21721600);
+    device.put("INIT", 1);
+
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    device.put("RECMODE", 1);
+    device.put("CAMERA", 1);
+
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+
+    device.put("CAMERA", 0);
+    device.put("INIT", 0);
+}
 
 int run(int argc, char** argv)
 {
     // About enough memory for a 1280x1024
     setenv("EPICS_CA_MAX_ARRAY_BYTES", "3000000", true);
 
+
     std::string prefix = "HELGETEST1-CCDCAM:";
 
-    Channel width_channel(prefix+"WIDTH");
+    start(prefix);
+
+    /*Channel width_channel(prefix+"WIDTH");
     Channel height_channel(prefix+"HEIGHT");
     Channel image_channel(prefix+"FPICTURE");
 
@@ -44,7 +63,7 @@ int run(int argc, char** argv)
     Channel::wait(1.0);
 
     auto mean = std::accumulate(image.begin(), image.end(), 0) / static_cast<double>(image.size());
-    std::cout << "Mean is " << mean << std::endl;
+    std::cout << "Mean is " << mean << std::endl;*/
 
     return 0;
 }

@@ -7,15 +7,33 @@
 class ImagePoller
 {
 public:
-    ImagePoller();
+    struct Result
+    {
+        QImage image;
+        std::uint16_t min;
+        std::uint16_t max;
+    };
 
-    void start(std::function<void(QImage image)> event);
+    ImagePoller(std::string prefix, int serialNumber);
+
+    void start(std::function<void(Result image)> event);
     void stop();
+
+    void setTonemapping(bool rhs);
 private:
     void run();
-    void poll();
 
-    std::function<void(QImage)> mEvent;
+    void startAcquisition();
+    void poll();
+    void stopAcquisition();
+
+    void dispatch(QImage image, std::uint16_t min, std::uint16_t max);
+
+    std::function<void(Result)> mEvent;
     std::thread mThread;
     std::atomic_bool mKeepRunning{false};
+    std::atomic_bool mTonemapping{true};
+
+    std::string mPrefix;
+    int mSerialNumber;
 };

@@ -2,7 +2,11 @@
 set(TARGET_NAME shared)
 
 
-add_library(${TARGET_NAME} Channel.cpp Channel.h)
+add_library(${TARGET_NAME}
+  Channel.cpp
+  Channel.h
+  Device.cpp
+  Device.h)
 
 
 target_include_directories(${TARGET_NAME}
