@@ -2,19 +2,20 @@
 #include <thread>
 #include <functional>
 #include <atomic>
+#include <QImage>
 
 class ImagePoller
 {
 public:
-    ImagePoller(std::function<void()> event);
+    ImagePoller();
 
-    void start();
+    void start(std::function<void(QImage image)> event);
     void stop();
 private:
     void run();
     void poll();
 
-    std::function<void()> mEvent;
+    std::function<void(QImage)> mEvent;
     std::thread mThread;
     std::atomic_bool mKeepRunning{false};
 };

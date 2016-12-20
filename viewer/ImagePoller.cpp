@@ -3,17 +3,18 @@
 #include <iostream>
 #include <vector>
 #include <numeric>
+#include <QImage>
 
-ImagePoller::ImagePoller(std::function<void()> event)
-    : mEvent(event)
+ImagePoller::ImagePoller()
 {
 }
 
-void ImagePoller::start()
+void ImagePoller::start(std::function<void (QImage)> event)
 {
     if (mKeepRunning)
         return;
 
+    mEvent = event;
     mKeepRunning = true;
     mThread = std::thread([this]()
     {
@@ -56,18 +57,16 @@ void ImagePoller::poll()
 
     Channel::wait(1.0);
 
-    auto state = width_channel.state();
-    if (state == cs_conn)
-        std::cout << "Connected!" << std::endl;
-    else
-        std::cout << "State is " << state << std::endl;
+    if (width_channel.state() != cs_conn ||
+        height_channel.state() != cs_conn ||
+        image_channel.state() != cs_conn)
+        return;
 
     std::int16_t width=0;
     std::int16_t height=0;
     width_channel.array_get(DBR_INT, 1, &width);
     height_channel.array_get(DBR_INT, 1, &height);
     Channel::wait(1.0);
-    std::cout << "Size is " << width << "x" << height << std::endl;
 
     if (width <= 0 || height <= 0)
     {
@@ -81,5 +80,19 @@ void ImagePoller::poll()
     Channel::wait(1.0);
 
     auto mean = std::accumulate(image.begin(), image.end(), 0) / static_cast<double>(image.size());
-    std::cout << "Mean is " << mean << std::endl;
+
+    auto minMax = std::minmax_element(image.begin(), image.end());
+
+    QImage targetImage(width, height, QImage::Format_Grayscale8);
+
+    for (int y=0; y<height; ++y)
+    {
+        auto target = targetImage.scanLine(y);
+        auto source = image.begin() + y*width;
+        for (int x =0; x<width; ++x)
+            target[x] = (source[x]-*minMax.first)*255 / std::max(*minMax.second-*minMax.first, 1);
+    }
+
+    mEvent(targetImage);
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
 }
