@@ -1,36 +1,67 @@
 #include <cadef.h>
 #include <db_access.h>
 #include <iostream>
+#include "Channel.h"
+#include <vector>
+#include <numeric>
 
 
-int main(int argc, char** argv)
+
+int run(int argc, char** argv)
 {
-    chid channel;
-    capri priority = 0;
-    int result = ca_create_channel("HELGETEST1-CCDCAM:WIDTH", nullptr, nullptr, priority, &channel);
-    if (result != ECA_NORMAL)
-    {
-        return -1;
-    }
+    // About enough memory for a 1280x1024
+    setenv("EPICS_CA_MAX_ARRAY_BYTES", "3000000", true);
 
-    result = ca_pend_io(1.0);
-    if (result != ECA_NORMAL)
-        return -1;
+    std::string prefix = "HELGETEST1-CCDCAM:";
 
-    auto state = ca_state(channel);
+    Channel width_channel(prefix+"WIDTH");
+    Channel height_channel(prefix+"HEIGHT");
+    Channel image_channel(prefix+"FPICTURE");
+
+    Channel::wait(1.0);
+
+    auto state = width_channel.state();
     if (state == cs_conn)
         std::cout << "Connected!" << std::endl;
     else
         std::cout << "State is " << state << std::endl;
 
-    std::uint32_t width=0;
-    ca_array_get(DBR_INT, 1, channel, &width);
-    result = ca_pend_io(1.0);
-    if (result != ECA_NORMAL)
+    std::int16_t width=0;
+    std::int16_t height=0;
+    width_channel.array_get(DBR_INT, 1, &width);
+    height_channel.array_get(DBR_INT, 1, &height);
+    Channel::wait(1.0);
+    std::cout << "Size is " << width << "x" << height << std::endl;
+
+    if (width <= 0 && height <= 0)
+    {
         return -1;
+    }
 
-    std::cout << "Width is " << width << std::endl;
+    std::vector<std::uint16_t> image(width*height);
+    image_channel.array_get(DBR_INT, image.size(), image.data());
 
-    ca_clear_channel(channel);
+    Channel::wait(1.0);
+
+    auto mean = std::accumulate(image.begin(), image.end(), 0) / static_cast<double>(image.size());
+    std::cout << "Mean is " << mean << std::endl;
+
     return 0;
+}
+
+int main(int argc, char** argv)
+{
+    try
+    {
+        return run(argc, argv);
+    }
+    catch(std::exception const& error)
+    {
+        std::cerr << "Error: " << error.what() << std::endl;
+    }
+    catch(...)
+    {
+        std::cerr << "Error" << std::endl;
+        return -1;
+    }
 }

@@ -6,7 +6,8 @@ add_library(${TARGET_NAME} Channel.cpp Channel.h)
 
 
 target_include_directories(${TARGET_NAME}
-  PUBLIC ${EPICS_INCLUDE_DIRS})
+  PUBLIC ${EPICS_INCLUDE_DIRS}
+  INTERFACE ./)
 
 target_link_libraries(${TARGET_NAME}
   PUBLIC ${EPICS_LIBRARIES})
