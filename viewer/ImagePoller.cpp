@@ -70,7 +70,7 @@ void ImagePoller::startAcquisition()
     device.put("INIT", 1);
     std::this_thread::sleep_for(std::chrono::seconds(2));
     device.put("RECMODE", 1);
-    device.put("EXPOSURE", 6000);
+    device.put("EXPOSURE", 100);
     device.put("CAMERA", 1);
 }
 

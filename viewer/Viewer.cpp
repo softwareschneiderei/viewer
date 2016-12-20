@@ -2,10 +2,10 @@
 #include "ui_Viewer.h"
 #include <QToolButton>
 
-Viewer::Viewer(QWidget *parent) :
+Viewer::Viewer(QString device, int serial, QWidget *parent) :
     QMainWindow(parent),
     mUi(new Ui::Viewer),
-    mPoller("HELGETEST1-CCDCAM:", 21721600)
+    mPoller(device.toStdString(), serial)
 {
     mUi->setupUi(this);
     mImageStatsLabel = new QLabel(this);

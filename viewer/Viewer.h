@@ -15,7 +15,7 @@ class Viewer : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Viewer(QWidget *parent = 0);
+    explicit Viewer(QString device, int serial, QWidget *parent = 0);
     ~Viewer();
 
 private:
