@@ -113,28 +113,34 @@ void ImagePoller::poll()
     if (mTonemapping)
     {
 
-        QImage targetImage(width, height, QImage::Format_Grayscale8);
+        QImage targetImage(width, height, QImage::Format_RGB32);
 
         for (int y=0; y<height; ++y)
         {
-            auto target = targetImage.scanLine(y);
+            auto target = reinterpret_cast<QRgb*>(targetImage.scanLine(y));
             auto source = image.begin() + y*width;
             for (int x =0; x<width; ++x)
-                target[x] = (source[x]-*minMax.first)*255 / std::max(*minMax.second-*minMax.first, 1);
+            {
+                int gray = (source[x]-*minMax.first)*255 / std::max(*minMax.second-*minMax.first, 1);
+                target[x] = qRgb(gray, gray, gray);
+            }
         }
 
         dispatch(targetImage, *minMax.first, *minMax.second);
     }
     else
     {
-        QImage targetImage(width, height, QImage::Format_Grayscale8);
+        QImage targetImage(width, height, QImage::Format_RGB32);
 
         for (int y=0; y<height; ++y)
         {
-            auto target = targetImage.scanLine(y);
+            auto target = reinterpret_cast<QRgb*>(targetImage.scanLine(y));
             auto source = image.begin() + y*width;
             for (int x =0; x<width; ++x)
-                target[x] = source[x] >> 8;
+            {
+                int gray = source[x] >> 8;
+                target[x] = qRgb(gray, gray, gray);
+            }
         }
 
         dispatch(targetImage, *minMax.first, *minMax.second);
