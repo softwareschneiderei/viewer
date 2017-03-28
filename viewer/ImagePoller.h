@@ -12,6 +12,8 @@ public:
         QImage image;
         std::uint16_t min;
         std::uint16_t max;
+        std::uint64_t imageIndex;
+        std::uint16_t errorIndex;
     };
 
     ImagePoller(std::string prefix, int serialNumber);
@@ -36,4 +38,6 @@ private:
 
     std::string mPrefix;
     int mSerialNumber;
+    std::uint64_t mImageIndex=0;
+    std::uint64_t mErrorIndex=0;
 };

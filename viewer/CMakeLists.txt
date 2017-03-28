@@ -18,6 +18,8 @@ add_executable(${TARGET_NAME} WIN32
   Main.h
   FunctionEvent.cpp
   FunctionEvent.h
+  DisplayWidget.cpp
+  DisplayWidget.h
   ImagePoller.cpp
   ImagePoller.h)
 

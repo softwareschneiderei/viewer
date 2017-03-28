@@ -158,6 +158,5 @@ void ImagePoller::stopAcquisition()
 
 void ImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
 {
-    QImage scaledImage = image.scaledToWidth(600);
-    mEvent({scaledImage, min, max});
+    mEvent({image, min, max});
 }

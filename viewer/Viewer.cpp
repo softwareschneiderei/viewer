@@ -28,9 +28,7 @@ Viewer::~Viewer()
 }
 
 void Viewer::updateImage(ImagePoller::Result result)
-{
-    QPixmap pixmap;
-    pixmap.convertFromImage(result.image);
-    mUi->label->setPixmap(pixmap);
+{;
+    mUi->display->setImage(result.image);
     mImageStatsLabel->setText(QString("Min: %1, Max %2").arg(result.min).arg(result.max));
 }
