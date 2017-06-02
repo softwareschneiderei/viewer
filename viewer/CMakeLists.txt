@@ -24,7 +24,9 @@ add_executable(${TARGET_NAME} WIN32
   EpicsImagePoller.h)
 
 # Use the Widgets module from Qt 5.
-qt5_use_modules(${TARGET_NAME} Widgets)
+# qt5_use_modules(${TARGET_NAME} Widgets)
 
 target_link_libraries(${TARGET_NAME}
-  shared)
+  PUBLIC shared
+  PUBLIC camera_common
+  PUBLIC Qt5::Widgets)

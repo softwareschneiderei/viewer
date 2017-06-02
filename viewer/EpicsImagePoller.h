@@ -3,8 +3,10 @@
 #include <functional>
 #include <atomic>
 #include <QImage>
+#include "AbstractImagePoller.h"
 
-class EpicsImagePoller
+class EpicsImagePoller : public AbstractImagePoller
+
 {
 public:
     struct Result
