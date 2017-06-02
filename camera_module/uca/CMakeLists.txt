@@ -5,8 +5,6 @@ pkg_check_modules(GOBJECT2 gobject-2.0>=2.24 REQUIRED)
 pkg_check_modules(UCA libuca>=1.3.0 REQUIRED)
 
 include_directories(
-  ${GLIB2_INCLUDE_DIRS}
-  ${UCA_INCLUDE_DIRS}
 )
 
 link_directories(
@@ -22,7 +20,9 @@ add_library(${TARGET_NAME} SHARED
 
 
 target_include_directories(${TARGET_NAME}
-  PUBLIC ${EPICS_INCLUDE_DIRS}
+  PUBLIC ${GOBJECT2_INCLUDE_DIRS}
+  PUBLIC ${GLIB2_INCLUDE_DIRS}
+  PUBLIC ${UCA_INCLUDE_DIRS}
   INTERFACE ./)
 
 target_link_libraries(${TARGET_NAME}
