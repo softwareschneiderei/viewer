@@ -1,2 +1,4 @@
 CMakeLists.txt.user
 *.autosave
+cmake-build-debug/
+cmake-build-release/

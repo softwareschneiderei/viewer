@@ -1,10 +1,4 @@
 
-# Instruct CMake to run moc automatically when needed.
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTOUIC ON)
-
-# Find the QtWidgets library
-find_package(Qt5Widgets REQUIRED)
 
 set(TARGET_NAME camera_common)
 
