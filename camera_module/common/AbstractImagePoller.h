@@ -10,8 +10,6 @@ public:
     QImage image;
     std::uint16_t min;
     std::uint16_t max;
-    std::uint64_t imageIndex;
-    std::uint16_t errorIndex;
   };
 
   using ResultEvent = std::function<void(Result)>;

@@ -11,59 +11,6 @@ EpicsImagePoller::EpicsImagePoller(std::string prefix, int serialNumber)
 {
 }
 
-void EpicsImagePoller::start(ResultEvent event)
-{
-  if (mKeepRunning)
-  {
-    return;
-  }
-
-  mEvent = event;
-  mKeepRunning = true;
-  mThread = std::thread([this]()
-                        {
-                          run();
-                        });
-}
-
-void EpicsImagePoller::stop()
-{
-  mKeepRunning = false;
-  mThread.join();
-}
-
-void EpicsImagePoller::run()
-{
-  startAcquisition();
-
-  while (mKeepRunning)
-  {
-    try
-    {
-      poll();
-      continue;
-    }
-    catch (std::exception const &error)
-    {
-      std::cerr << "Error: " << error.what() << std::endl;
-    }
-    catch (...)
-    {
-      std::cerr << "Unknown error" << std::endl;
-    }
-
-    // Sleep a while after an error
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-  }
-
-  stopAcquisition();
-}
-
-void EpicsImagePoller::setTonemapping(bool rhs)
-{
-  mTonemapping = rhs;
-}
-
 void EpicsImagePoller::startAcquisition()
 {
   Device device(mPrefix);
@@ -76,8 +23,9 @@ void EpicsImagePoller::startAcquisition()
   device.put("CAMERA", 1);
 }
 
-void EpicsImagePoller::poll()
+void EpicsImagePoller::poll(bool toneMapping)
 {
+  std::this_thread::sleep_for(std::chrono::milliseconds(66));
 
   Channel width_channel(mPrefix + "WIDTH");
   Channel height_channel(mPrefix + "HEIGHT");
@@ -114,7 +62,7 @@ void EpicsImagePoller::poll()
 
   auto minMax = std::minmax_element(image.begin(), image.end());
 
-  if (mTonemapping)
+  if (toneMapping)
   {
 
     QImage targetImage(width, height, QImage::Format_RGB32);
@@ -149,8 +97,6 @@ void EpicsImagePoller::poll()
 
     dispatch(targetImage, *minMax.first, *minMax.second);
   }
-
-  std::this_thread::sleep_for(std::chrono::milliseconds(66));
 }
 
 void EpicsImagePoller::stopAcquisition()
@@ -160,7 +106,3 @@ void EpicsImagePoller::stopAcquisition()
   device.put("INIT", 0);
 }
 
-void EpicsImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
-{
-  mEvent({image, min, max});
-}
