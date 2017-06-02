@@ -17,6 +17,7 @@ public:
   virtual void poll(bool toneMapping) = 0;
   virtual void stopAcquisition() = 0;
 
+  void dispatch(Result result);
   void dispatch(QImage image, std::uint16_t min, std::uint16_t max);
 private:
   void run();

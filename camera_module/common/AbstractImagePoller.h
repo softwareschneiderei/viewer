@@ -8,8 +8,8 @@ public:
   struct Result
   {
     QImage image;
-    std::uint16_t min;
-    std::uint16_t max;
+    std::uint32_t min;
+    std::uint32_t max;
   };
 
   using ResultEvent = std::function<void(Result)>;

@@ -66,3 +66,9 @@ void ThreadedImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
 {
   mEvent({image, min, max});
 }
+
+void ThreadedImagePoller::dispatch(AbstractImagePoller::Result result)
+{
+  mEvent(result);
+
+}

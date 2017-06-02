@@ -2,6 +2,7 @@
 #include "UcaImagePoller.h"
 
 #include <uca/uca-plugin-manager.h>
+#include <cstring>
 
 namespace {
 guint bytes_per_pixel (guint bits)
@@ -19,6 +20,33 @@ void check_error(GError* error, std::string const& context)
   auto message = context + error->message;
   g_error_free(error);
   throw std::runtime_error(message);
+}
+
+
+template <typename T>
+AbstractImagePoller::Result blitImage(std::vector<std::uint8_t> const& buffer, unsigned int width, unsigned int height)
+{
+  QImage targetImage(width, height, QImage::Format_RGB32);
+
+  std::uint32_t min = std::numeric_limits<std::uint32_t>::max();
+  std::uint32_t max = std::numeric_limits<std::uint32_t>::min();
+
+  for (int y = 0; y < height; ++y)
+  {
+    auto target = reinterpret_cast<QRgb*>(targetImage.scanLine(y));
+    auto source = buffer.data() + y * width * sizeof(T);
+    for (int x = 0; x < width; ++x)
+    {
+      T gray;
+      std::memcpy(&gray, source + x*sizeof(T), sizeof(T));
+      min = std::min(min, static_cast<std::uint32_t>(gray));
+      max = std::max(max, static_cast<std::uint32_t>(gray));
+      gray  = gray >> 8*(sizeof(T)-1);
+      target[x] = qRgb(gray, gray, gray);
+    }
+  }
+
+  return {targetImage, min, max};
 }
 }
 
@@ -69,6 +97,21 @@ void UcaImagePoller::poll(bool toneMapping)
   GError* error=nullptr;
   uca_camera_grab (mCamera, mBuffer.data(), &error);
   check_error(error, "Error grabbing image ");
+
+  switch(mBits)
+  {
+  case 8:
+    dispatch(blitImage<std::uint8_t>(mBuffer, mWidth, mHeight));
+    return;
+  case 16:
+    dispatch(blitImage<std::uint16_t>(mBuffer, mWidth, mHeight));
+    return;
+  case 32:
+    dispatch(blitImage<std::uint32_t>(mBuffer, mWidth, mHeight));
+    return;
+  default:
+    return;
+  }
 }
 
 void UcaImagePoller::stopAcquisition()
