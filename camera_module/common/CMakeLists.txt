@@ -4,7 +4,9 @@ set(TARGET_NAME camera_common)
 
 add_library(${TARGET_NAME}
   AbstractImagePoller.cpp
-  AbstractImagePoller.h)
+  AbstractImagePoller.h
+  ThreadedImagePoller.cpp
+  ThreadedImagePoller.h)
 
 target_include_directories(${TARGET_NAME}
   INTERFACE ./)

@@ -21,4 +21,5 @@ add_executable(${TARGET_NAME} WIN32
 target_link_libraries(${TARGET_NAME}
   PUBLIC camera_common
   PUBLIC camera_epics
+  PUBLIC camera_emulated
   PUBLIC Qt5::Widgets)

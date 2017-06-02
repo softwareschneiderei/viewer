@@ -38,12 +38,12 @@ int main(int argc, char** argv)
     QString serial = parser.value(serialOption);
     int serialValue = serial.toInt(&ok);
 
-    if (!ok)
+    /*if (!ok)
     {
         QMessageBox::critical(nullptr, "Invalid serial",
                           QString("The given serial %1 is not a valid number.").arg(serial));
         return -1;
-    }
+    }*/
 
 
     Viewer window(device, serialValue);

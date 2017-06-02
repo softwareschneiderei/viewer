@@ -1,11 +1,13 @@
 #include "Viewer.h"
 #include "ui_Viewer.h"
 #include <QToolButton>
+#include "EmulatedImagePoller.h"
 
 Viewer::Viewer(QString device, int serial, QWidget *parent) :
     QMainWindow(parent),
     mUi(new Ui::Viewer),
-    mPoller(std::make_shared<EpicsImagePoller>(device.toStdString(), serial))
+    //mPoller(std::make_shared<EpicsImagePoller>(device.toStdString(), serial))
+mPoller(std::make_shared<EmulatedImagePoller>())
 {
     mUi->setupUi(this);
     mImageStatsLabel = new QLabel(this);

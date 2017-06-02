@@ -1,13 +1,16 @@
 #pragma once
-#include "AbstractImagePoller.h"
+#include "ThreadedImagePoller.h"
+#include <thread>
+#include <atomic>
 
-class EmulatedImagePoller : public AbstractImagePoller
+class EmulatedImagePoller : public ThreadedImagePoller
 {
-public:
-  void start(ResultEvent event) override;
-  void stop() override;
+  void startAcquisition() override;
 
-  void setTonemapping(bool rhs) override;
+  void poll(bool toneMapping) override;
+
+  void stopAcquisition() override;
+
+public:
 private:
-  ResultEvent mEvent;
 };

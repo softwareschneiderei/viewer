@@ -1,16 +1,19 @@
 #include "EmulatedImagePoller.h"
 
-void EmulatedImagePoller::start(ResultEvent event)
+void EmulatedImagePoller::startAcquisition()
 {
 
 }
 
-void EmulatedImagePoller::stop()
+void EmulatedImagePoller::poll(bool toneMapping)
 {
+  std::this_thread::sleep_for(std::chrono::milliseconds(33));
+  QImage targetImage(600, 600, QImage::Format_RGB32);
 
+  this->dispatch(targetImage, 0, 0);
 }
 
-void EmulatedImagePoller::setTonemapping(bool rhs)
+void EmulatedImagePoller::stopAcquisition()
 {
 
 }
