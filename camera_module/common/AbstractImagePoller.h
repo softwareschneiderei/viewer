@@ -20,5 +20,5 @@ public:
   virtual void start(ResultEvent event)=0;
   virtual void stop()=0;
 
-  virtual void setTonemapping(bool rhs)=0;
+  virtual void setAutoLeveling(bool rhs)=0;
 };

@@ -38,7 +38,7 @@ void ThreadedImagePoller::run()
   {
     try
     {
-      poll(mTonemapping);
+      poll(mAutoLeveling);
       continue;
     }
     catch (std::exception const &error)
@@ -57,9 +57,9 @@ void ThreadedImagePoller::run()
   stopAcquisition();
 }
 
-void ThreadedImagePoller::setTonemapping(bool rhs)
+void ThreadedImagePoller::setAutoLeveling(bool rhs)
 {
-  mTonemapping = rhs;
+  mAutoLeveling = rhs;
 }
 
 void ThreadedImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)

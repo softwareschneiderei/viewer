@@ -15,7 +15,7 @@ mPoller(std::make_shared<EmulatedImagePoller>())
 
     connect(mUi->tonemapping, &QToolButton::clicked, [this](bool checked)
     {
-        mPoller->setTonemapping(checked);
+      mPoller->setAutoLeveling(checked);
     });
 
     mPoller->start([this](EpicsImagePoller::Result result)
