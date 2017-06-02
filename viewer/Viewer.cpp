@@ -5,7 +5,7 @@
 Viewer::Viewer(QString device, int serial, QWidget *parent) :
     QMainWindow(parent),
     mUi(new Ui::Viewer),
-    mPoller(device.toStdString(), serial)
+    mPoller(std::make_shared<EpicsImagePoller>(device.toStdString(), serial))
 {
     mUi->setupUi(this);
     mImageStatsLabel = new QLabel(this);
@@ -13,10 +13,10 @@ Viewer::Viewer(QString device, int serial, QWidget *parent) :
 
     connect(mUi->tonemapping, &QToolButton::clicked, [this](bool checked)
     {
-        mPoller.setTonemapping(checked);
+        mPoller->setTonemapping(checked);
     });
 
-    mPoller.start([this](EpicsImagePoller::Result result)
+    mPoller->start([this](EpicsImagePoller::Result result)
     {
         updateImage(result);
     });
@@ -24,7 +24,7 @@ Viewer::Viewer(QString device, int serial, QWidget *parent) :
 
 Viewer::~Viewer()
 {
-    mPoller.stop();
+    mPoller->stop();
 }
 
 void Viewer::updateImage(EpicsImagePoller::Result result)

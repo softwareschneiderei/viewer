@@ -22,7 +22,7 @@ private:
     void updateImage(EpicsImagePoller::Result result);
 
     std::unique_ptr<Ui::Viewer> mUi;
-    std::shared_ptr<EpicsImagePoller> mPoller;
+    std::shared_ptr<AbstractImagePoller> mPoller;
     QLabel* mImageStatsLabel;
 };
 

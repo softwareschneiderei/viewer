@@ -9,21 +9,12 @@ class EpicsImagePoller : public AbstractImagePoller
 
 {
 public:
-    struct Result
-    {
-        QImage image;
-        std::uint16_t min;
-        std::uint16_t max;
-        std::uint64_t imageIndex;
-        std::uint16_t errorIndex;
-    };
-
     EpicsImagePoller(std::string prefix, int serialNumber);
 
-    void start(std::function<void(Result image)> event);
-    void stop();
+    void start(std::function<void(Result image)> event) override;
+    void stop() override;
 
-    void setTonemapping(bool rhs);
+    void setTonemapping(bool rhs) override;
 private:
     void run();
 

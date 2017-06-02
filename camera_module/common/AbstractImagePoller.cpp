@@ -1,5 +1,4 @@
-//
-// Created by vagrant on 6/2/17.
-//
-
 #include "AbstractImagePoller.h"
+
+AbstractImagePoller::AbstractImagePoller() = default;
+AbstractImagePoller::~AbstractImagePoller() = default;

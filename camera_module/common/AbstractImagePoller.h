@@ -1,4 +1,5 @@
 #pragma once
+#include <QImage>
 
 class AbstractImagePoller
 {
@@ -13,10 +14,10 @@ public:
   };
 
   AbstractImagePoller();
-  ~AbstractImagePoller();
+  virtual ~AbstractImagePoller();
 
-  virtual void start(std::function<void(Result image)> event);
-  virtual void stop();
+  virtual void start(std::function<void(Result image)> event)=0;
+  virtual void stop()=0;
 
-  virtual void setTonemapping(bool rhs);
+  virtual void setTonemapping(bool rhs)=0;
 };
