@@ -22,4 +22,5 @@ target_link_libraries(${TARGET_NAME}
   PUBLIC camera_common
   PUBLIC camera_epics
   PUBLIC camera_emulated
+  PUBLIC camera_uca
   PUBLIC Qt5::Widgets)
