@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.4)
-project(epics_viewer)
+project(Viewer)
 
 # Instruct CMake to run moc automatically when needed.
 set(CMAKE_AUTOMOC ON)
