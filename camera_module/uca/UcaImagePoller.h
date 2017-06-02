@@ -8,6 +8,7 @@ class UcaImagePoller : public ThreadedImagePoller
 {
 public:
   UcaImagePoller(std::string const& name);
+  ~UcaImagePoller();
 
   void startAcquisition() override;
 
@@ -17,5 +18,10 @@ public:
 
 private:
   UcaCamera* mCamera;
+  guint mWidth;
+  guint mHeight;
+  guint mBits;
+  std::vector<std::uint8_t> mBuffer;
+
 };
 
