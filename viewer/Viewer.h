@@ -1,7 +1,7 @@
 #pragma once
 #include <QMainWindow>
 #include <memory>
-#include "ImagePoller.h"
+#include "EpicsImagePoller.h"
 #include <QLabel>
 
 namespace Ui {
@@ -19,10 +19,10 @@ public:
     ~Viewer();
 
 private:
-    void updateImage(ImagePoller::Result result);
+    void updateImage(EpicsImagePoller::Result result);
 
     std::unique_ptr<Ui::Viewer> mUi;
-    ImagePoller mPoller;
+    std::shared_ptr<EpicsImagePoller> mPoller;
     QLabel* mImageStatsLabel;
 };
 

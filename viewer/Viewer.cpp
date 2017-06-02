@@ -16,7 +16,7 @@ Viewer::Viewer(QString device, int serial, QWidget *parent) :
         mPoller.setTonemapping(checked);
     });
 
-    mPoller.start([this](ImagePoller::Result result)
+    mPoller.start([this](EpicsImagePoller::Result result)
     {
         updateImage(result);
     });
@@ -27,7 +27,7 @@ Viewer::~Viewer()
     mPoller.stop();
 }
 
-void Viewer::updateImage(ImagePoller::Result result)
+void Viewer::updateImage(EpicsImagePoller::Result result)
 {;
     mUi->display->setImage(result.image);
     mImageStatsLabel->setText(QString("Min: %1, Max %2").arg(result.min).arg(result.max));

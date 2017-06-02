@@ -20,8 +20,8 @@ add_executable(${TARGET_NAME} WIN32
   FunctionEvent.h
   DisplayWidget.cpp
   DisplayWidget.h
-  ImagePoller.cpp
-  ImagePoller.h)
+  EpicsImagePoller.cpp
+  EpicsImagePoller.h)
 
 # Use the Widgets module from Qt 5.
 qt5_use_modules(${TARGET_NAME} Widgets)

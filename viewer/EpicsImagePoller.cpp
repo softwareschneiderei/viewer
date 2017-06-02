@@ -1,4 +1,4 @@
-#include "ImagePoller.h"
+#include "EpicsImagePoller.h"
 #include "Channel.h"
 #include "Device.h"
 #include <iostream>
@@ -6,12 +6,12 @@
 #include <numeric>
 #include <QImage>
 
-ImagePoller::ImagePoller(std::string prefix, int serialNumber)
+EpicsImagePoller::EpicsImagePoller(std::string prefix, int serialNumber)
 : mPrefix(prefix), mSerialNumber(serialNumber)
 {
 }
 
-void ImagePoller::start(std::function<void (Result)> event)
+void EpicsImagePoller::start(std::function<void (Result)> event)
 {
     if (mKeepRunning)
         return;
@@ -24,13 +24,13 @@ void ImagePoller::start(std::function<void (Result)> event)
     });
 }
 
-void ImagePoller::stop()
+void EpicsImagePoller::stop()
 {
     mKeepRunning = false;
     mThread.join();
 }
 
-void ImagePoller::run()
+void EpicsImagePoller::run()
 {
     startAcquisition();
 
@@ -57,12 +57,12 @@ void ImagePoller::run()
     stopAcquisition();
 }
 
-void ImagePoller::setTonemapping(bool rhs)
+void EpicsImagePoller::setTonemapping(bool rhs)
 {
     mTonemapping = rhs;
 }
 
-void ImagePoller::startAcquisition()
+void EpicsImagePoller::startAcquisition()
 {
     Device device(mPrefix);
 
@@ -74,7 +74,7 @@ void ImagePoller::startAcquisition()
     device.put("CAMERA", 1);
 }
 
-void ImagePoller::poll()
+void EpicsImagePoller::poll()
 {
 
     Channel width_channel(mPrefix+"WIDTH");
@@ -149,14 +149,14 @@ void ImagePoller::poll()
     std::this_thread::sleep_for(std::chrono::milliseconds(66));
 }
 
-void ImagePoller::stopAcquisition()
+void EpicsImagePoller::stopAcquisition()
 {
     Device device(mPrefix);
     device.put("CAMERA", 0);
     device.put("INIT", 0);
 }
 
-void ImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
+void EpicsImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
 {
     mEvent({image, min, max});
 }

@@ -4,7 +4,7 @@
 #include <atomic>
 #include <QImage>
 
-class ImagePoller
+class EpicsImagePoller
 {
 public:
     struct Result
@@ -16,7 +16,7 @@ public:
         std::uint16_t errorIndex;
     };
 
-    ImagePoller(std::string prefix, int serialNumber);
+    EpicsImagePoller(std::string prefix, int serialNumber);
 
     void start(std::function<void(Result image)> event);
     void stop();
