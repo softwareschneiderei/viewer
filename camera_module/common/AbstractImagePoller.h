@@ -1,5 +1,6 @@
 #pragma once
 #include <QImage>
+#include <functional>
 
 class AbstractImagePoller
 {
@@ -13,10 +14,12 @@ public:
     std::uint16_t errorIndex;
   };
 
+  using ResultEvent = std::function<void(Result)>;
+
   AbstractImagePoller();
   virtual ~AbstractImagePoller();
 
-  virtual void start(std::function<void(Result image)> event)=0;
+  virtual void start(ResultEvent event)=0;
   virtual void stop()=0;
 
   virtual void setTonemapping(bool rhs)=0;
