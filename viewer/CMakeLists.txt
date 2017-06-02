@@ -13,13 +13,11 @@ add_executable(${TARGET_NAME} WIN32
   FunctionEvent.cpp
   FunctionEvent.h
   DisplayWidget.cpp
-  DisplayWidget.h
-  EpicsImagePoller.cpp
-  EpicsImagePoller.h)
+  DisplayWidget.h)
 
 # Use the Widgets module from Qt 5.
 # qt5_use_modules(${TARGET_NAME} Widgets)
 
 target_link_libraries(${TARGET_NAME}
-  PUBLIC shared
-  PUBLIC camera_common)
+  PUBLIC camera_common
+  PUBLIC camera_epics)
