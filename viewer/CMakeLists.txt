@@ -10,6 +10,8 @@ add_executable(${TARGET_NAME} WIN32
   Viewer.ui
   Main.cpp
   Main.h
+  CameraModuleFactory.cpp
+  CameraModuleFactory.h
   FunctionEvent.cpp
   FunctionEvent.h
   DisplayWidget.cpp

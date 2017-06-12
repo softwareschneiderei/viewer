@@ -18,6 +18,9 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <widget class="QComboBox" name="module"/>
+      </item>
+      <item>
        <widget class="QCheckBox" name="tonemapping">
         <property name="text">
          <string>Tonemapping</string>
@@ -55,8 +58,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>780</width>
-         <height>531</height>
+         <width>784</width>
+         <height>519</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -90,7 +93,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>30</height>
     </rect>
    </property>
   </widget>
