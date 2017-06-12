@@ -4,8 +4,8 @@ pkg_check_modules(GLIB2 glib-2.0>=2.24 REQUIRED)
 pkg_check_modules(GOBJECT2 gobject-2.0>=2.24 REQUIRED)
 pkg_check_modules(UCA libuca>=1.3.0 REQUIRED)
 
-include_directories(
-)
+# Find includes in corresponding build directories
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 link_directories(
   ${UCA_LIBRARY_DIRS}
@@ -16,7 +16,10 @@ set(TARGET_NAME camera_uca)
 
 add_library(${TARGET_NAME} SHARED
   UcaImagePoller.cpp
-  UcaImagePoller.h)
+  UcaImagePoller.h
+  UcaConfigure.cpp
+  UcaConfigure.h
+  UcaConfigure.ui)
 
 
 target_include_directories(${TARGET_NAME}

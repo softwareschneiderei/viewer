@@ -1,6 +1,7 @@
 #include "Viewer.h"
 #include "ui_Viewer.h"
 #include <QToolButton>
+#include <QPushButton>
 #include <UcaImagePoller.h>
 #include "EmulatedImagePoller.h"
 
@@ -23,6 +24,19 @@ Viewer::Viewer(QString device, int serial, QWidget* parent) :
   connect(mUi->module, currentIndexChanged, [this](QString module)
   {
     changePoller(mCameraModuleFactory.createModule(module.toStdString()));
+  });
+
+  connect(mUi->configure, &QPushButton::clicked, [this]{
+    if (!mPoller)
+    {
+      return;
+    }
+    auto configurationWidget = mPoller->configure(this);
+    if (!configurationWidget)
+    {
+      return;
+    }
+    configurationWidget->show();
   });
 
   mImageStatsLabel = new QLabel(this);

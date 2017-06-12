@@ -11,12 +11,11 @@ class EpicsImagePoller : public ThreadedImagePoller
 public:
   EpicsImagePoller(std::string prefix, int serialNumber);
 
-
   void startAcquisition() override;
-
   void poll(bool toneMapping) override;
-
   void stopAcquisition() override;
+
+  QWidget* configure(QWidget* parent) override;
 
 private:
   std::string mPrefix;

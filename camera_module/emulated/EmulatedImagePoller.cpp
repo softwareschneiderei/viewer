@@ -18,3 +18,8 @@ void EmulatedImagePoller::stopAcquisition()
 {
 
 }
+
+QWidget* EmulatedImagePoller::configure(QWidget* parent)
+{
+  return nullptr;
+}

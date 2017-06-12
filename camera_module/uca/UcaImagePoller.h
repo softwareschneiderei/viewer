@@ -3,6 +3,7 @@
 #include "ThreadedImagePoller.h"
 
 #include <uca/uca-camera.h>
+#include <uca/uca-plugin-manager.h>
 
 class UcaImagePoller : public ThreadedImagePoller
 {
@@ -16,7 +17,9 @@ public:
 
   void stopAcquisition() override;
 
+  QWidget* configure(QWidget* parent) override;
 private:
+  UcaPluginManager* mManager;
   UcaCamera* mCamera;
   guint mWidth;
   guint mHeight;

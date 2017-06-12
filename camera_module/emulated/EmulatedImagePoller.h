@@ -11,6 +11,7 @@ class EmulatedImagePoller : public ThreadedImagePoller
 
   void stopAcquisition() override;
 
+  QWidget* configure(QWidget* parent) override;
 public:
 private:
 };

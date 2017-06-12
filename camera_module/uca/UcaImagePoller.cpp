@@ -1,8 +1,9 @@
 
 #include "UcaImagePoller.h"
 
-#include <uca/uca-plugin-manager.h>
 #include <cstring>
+#include "ui_UcaConfigure.h"
+#include "UcaConfigure.h"
 
 namespace {
 guint bytes_per_pixel (guint bits)
@@ -21,7 +22,6 @@ void check_error(GError* error, std::string const& context)
   g_error_free(error);
   throw std::runtime_error(message);
 }
-
 
 template <typename T>
 AbstractImagePoller::Result blitImage(std::vector<std::uint8_t> const& buffer, unsigned int width, unsigned int height)
@@ -53,9 +53,9 @@ AbstractImagePoller::Result blitImage(std::vector<std::uint8_t> const& buffer, u
 UcaImagePoller::UcaImagePoller(std::string const& name)
 {
   GError* error=nullptr;
-  UcaPluginManager *manager = uca_plugin_manager_new();
-  mCamera = uca_plugin_manager_get_camera(manager, name.c_str(), &error, NULL);
-  g_object_unref(manager);
+  mManager = uca_plugin_manager_new();
+  mCamera = uca_plugin_manager_get_camera(mManager, name.c_str(), &error, NULL);
+
 
   if (!mCamera || error != nullptr) {
     auto message = "Couldn't initialize camera " + name;
@@ -124,5 +124,11 @@ void UcaImagePoller::stopAcquisition()
 
 UcaImagePoller::~UcaImagePoller()
 {
-  g_object_unref (mCamera);
+  g_object_unref(mCamera);
+  g_object_unref(mManager);
+}
+
+QWidget* UcaImagePoller::configure(QWidget* parent)
+{
+  return new UcaConfigure(mManager, parent);
 }

@@ -13,7 +13,8 @@ add_library(${TARGET_NAME} SHARED
   Device.cpp
   Device.h
   EpicsImagePoller.cpp
-  EpicsImagePoller.h)
+  EpicsImagePoller.h
+  EpicsConfigure.ui)
 
 
 target_include_directories(${TARGET_NAME}

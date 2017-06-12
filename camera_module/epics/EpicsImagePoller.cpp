@@ -106,3 +106,8 @@ void EpicsImagePoller::stopAcquisition()
   device.put("INIT", 0);
 }
 
+QWidget* EpicsImagePoller::configure(QWidget* parent)
+{
+  return nullptr;
+}
+
