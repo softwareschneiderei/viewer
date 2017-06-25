@@ -2,7 +2,7 @@
 
 #include <QMainWindow>
 #include <memory>
-#include "EpicsImagePoller.h"
+#include "AbstractImagePoller.h"
 #include "CameraModuleFactory.h"
 #include <QLabel>
 
@@ -17,12 +17,12 @@ class Viewer : public QMainWindow
 Q_OBJECT
 
 public:
-  explicit Viewer(QString device, int serial, QWidget* parent = 0);
+  explicit Viewer(QWidget* parent = 0);
 
   ~Viewer();
 
 private:
-  void updateImage(EpicsImagePoller::Result result);
+  void updateImage(AbstractImagePoller::Result result);
   void changePoller(std::shared_ptr<AbstractImagePoller> poller);
   std::unique_ptr<Ui::Viewer> mUi;
   std::shared_ptr<AbstractImagePoller> mPoller;

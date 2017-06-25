@@ -5,7 +5,7 @@
 #include <UcaImagePoller.h>
 #include "EmulatedImagePoller.h"
 
-Viewer::Viewer(QString device, int serial, QWidget* parent) :
+Viewer::Viewer(QWidget* parent) :
   QMainWindow(parent),
   mUi(new Ui::Viewer)
 {
@@ -65,14 +65,14 @@ void Viewer::changePoller(std::shared_ptr<AbstractImagePoller> poller)
 
   if (mPoller)
   {
-    mPoller->start([this](EpicsImagePoller::Result result)
+    mPoller->start([this](AbstractImagePoller::Result result)
                    {
                      updateImage(result);
                    });
   }
 
 }
-void Viewer::updateImage(EpicsImagePoller::Result result)
+void Viewer::updateImage(AbstractImagePoller::Result result)
 {
   mUi->display->setImage(result.image);
   mImageStatsLabel->setText(QString("Min: %1, Max %2").arg(result.min).arg(result.max));

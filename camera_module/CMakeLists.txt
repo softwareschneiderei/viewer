@@ -1,7 +1,5 @@
 
 
-option(VIEWER_EPICS_PLUGIN "Enable epics plugin"
-  FALSE)
 
 add_subdirectory(common)
 add_subdirectory(emulated)

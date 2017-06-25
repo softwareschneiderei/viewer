@@ -20,9 +20,15 @@ add_executable(${TARGET_NAME} WIN32
 # Use the Widgets module from Qt 5.
 # qt5_use_modules(${TARGET_NAME} Widgets)
 
+target_compile_definitions(${TARGET_NAME}
+  PUBLIC -DVIEWER_VERSION=${VERSION})
 target_link_libraries(${TARGET_NAME}
   PUBLIC camera_common
-  PUBLIC camera_epics
   PUBLIC camera_emulated
   PUBLIC camera_uca
   PUBLIC Qt5::Widgets)
+
+if(${VIEWER_EPICS_PLUGIN})
+  target_link_libraries(${TARGET_NAME}
+    PUBLIC camera_epics)
+endif()
