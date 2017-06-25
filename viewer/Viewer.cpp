@@ -3,6 +3,7 @@
 #include <QToolButton>
 #include <QPushButton>
 #include <UcaImagePoller.h>
+#include <QtCore/QSettings>
 #include "EmulatedImagePoller.h"
 
 Viewer::Viewer(QWidget* parent) :
@@ -11,22 +12,8 @@ Viewer::Viewer(QWidget* parent) :
 {
   mUi->setupUi(this);
 
-  for (auto const &moduleName : mCameraModuleFactory.getAvailableModules())
-  {
-    mUi->module->addItem(moduleName.c_str(), QString(moduleName.c_str()));
-  }
+  setupModules();
 
-  if (!mCameraModuleFactory.getAvailableModules().empty())
-  {
-    mPlaybackController.change(mCameraModuleFactory.createModule(mCameraModuleFactory.getAvailableModules().front()));
-  }
-
-  auto currentIndexChanged = static_cast<void (QComboBox::*)(QString const &)>(&QComboBox::currentIndexChanged);
-  connect(mUi->module, currentIndexChanged, [this](QString module)
-  {
-    mPlaybackController.change(mCameraModuleFactory.createModule(module.toStdString()));
-    mUi->display->setImage({});
-  });
 
   connect(mUi->configure, &QPushButton::clicked, [this]
   {
@@ -49,6 +36,37 @@ Viewer::Viewer(QWidget* parent) :
                                   {
                                     updateImage(result);
                                   });
+}
+
+void Viewer::setupModules()
+{
+  auto const& modules = mCameraModuleFactory.getAvailableModules();
+
+  QString defaultModule = (!modules.empty()) ? modules.front().c_str() : "";
+
+  QSettings settings;
+  auto module = settings.value("camera/module", defaultModule).toString().toStdString();
+
+  for (auto const& moduleName : modules)
+  {
+    mUi->module->addItem(moduleName.c_str(), QString(moduleName.c_str()));
+
+    if (moduleName == module)
+    {
+      mUi->module->setCurrentIndex(mUi->module->count()-1);
+    }
+  }
+  mPlaybackController.change(mCameraModuleFactory.createModule(module));
+
+  auto currentIndexChanged = static_cast<void (QComboBox::*)(QString const &)>(&QComboBox::currentIndexChanged);
+  connect(mUi->module, currentIndexChanged, [this](QString module)
+  {
+    QSettings settings;
+    settings.setValue("camera/module", module);
+    mPlaybackController.change(mCameraModuleFactory.createModule(module.toStdString()));
+    mUi->display->setImage({});
+  });
+
 }
 
 Viewer::~Viewer()

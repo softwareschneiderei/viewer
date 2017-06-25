@@ -21,6 +21,7 @@ int main(int argc, char** argv)
 
   Application application(argc, argv);
   Application::setApplicationName("Viewer");
+  Application::setOrganizationName("Schneide");
   Application::setApplicationVersion(EXPAND_QUOTE(VIEWER_VERSION));
 
   QCommandLineParser parser;

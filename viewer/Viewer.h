@@ -24,11 +24,13 @@ public:
 
 private:
   void updateImage(PlaybackController::TimedResult result);
+  void setupModules();
 
   std::unique_ptr<Ui::Viewer> mUi;
   PlaybackController mPlaybackController;
   CameraModuleFactory mCameraModuleFactory;
 
   QLabel* mImageStatsLabel;
+
 };
 
