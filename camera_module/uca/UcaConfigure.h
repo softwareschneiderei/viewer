@@ -16,6 +16,8 @@ public:
   UcaConfigure(UcaPluginManager* manager, QWidget* parent);
   ~UcaConfigure();
 
+  void onCameraSelected(QString const& camera);
+
 private:
   std::unique_ptr<Ui::UcaConfigureDialog> mUi;
   UcaPluginManager* mManager;

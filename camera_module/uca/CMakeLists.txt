@@ -19,6 +19,8 @@ add_library(${TARGET_NAME} SHARED
   UcaImagePoller.h
   UcaConfigure.cpp
   UcaConfigure.h
+  UcaTableModel.cpp
+  UcaTableModel.h
   UcaConfigure.ui)
 
 

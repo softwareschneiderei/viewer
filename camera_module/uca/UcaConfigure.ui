@@ -27,7 +27,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="availableCameras"/>
+    <widget class="QComboBox" name="cameraSelector"/>
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
