@@ -27,14 +27,15 @@ ThreadedImagePoller::ThreadedImagePoller()
 {
 }
 
-void ThreadedImagePoller::start(ResultEvent event)
+void ThreadedImagePoller::start(ResultEvent resultEvent, AbortEvent abortEvent)
 {
   if (mKeepRunning)
   {
     return;
   }
 
-  mEvent = event;
+  mResultEvent = std::move(resultEvent);
+  mAbortEvent = std::move(abortEvent);
   mKeepRunning = true;
   mThread = std::thread([this]()
                         {
@@ -53,6 +54,12 @@ void ThreadedImagePoller::run()
   try
   {
     startAcquisition();
+  }
+  catch(std::exception const& e)
+  {
+    logError();
+    abort(e.what());
+    return;
   }
   catch(...)
   {
@@ -89,11 +96,17 @@ void ThreadedImagePoller::run()
 
 void ThreadedImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
 {
-  mEvent({image, min, max});
+  mResultEvent({image, min, max});
 }
 
 void ThreadedImagePoller::dispatch(AbstractImagePoller::Result result)
 {
-  mEvent(result);
+  mResultEvent(result);
 
+}
+
+void ThreadedImagePoller::abort(std::string const &message)
+{
+  mKeepRunning = false;
+  mAbortEvent(message);
 }

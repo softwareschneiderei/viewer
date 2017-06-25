@@ -73,7 +73,7 @@ void UcaImagePoller::startAcquisition()
   GError* error=nullptr;
   uca_camera_start_recording(mState->getCamera(), &error);
 
-  checkError(error, "Error starting camera ");
+  checkError(error, "Error starting camera:\n");
 
   mBuffer.resize(bytesPerPixel(mBits)*mWidth*mHeight);
 }
@@ -82,7 +82,7 @@ void UcaImagePoller::poll()
 {
   GError* error=nullptr;
   uca_camera_grab (mState->getCamera(), mBuffer.data(), &error);
-  checkError(error, "Error grabbing image ");
+  checkError(error, "Error grabbing image:\n");
 
   switch(mBits)
   {
@@ -105,7 +105,7 @@ void UcaImagePoller::stopAcquisition()
   GError* error=nullptr;
   uca_camera_stop_recording (mState->getCamera(), &error);
 
-  checkError(error, "Error stopping camera ");
+  checkError(error, "Error stopping camera:\n");
 }
 
 UcaImagePoller::~UcaImagePoller()

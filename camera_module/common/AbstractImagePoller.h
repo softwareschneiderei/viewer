@@ -13,11 +13,12 @@ public:
   };
 
   using ResultEvent = std::function<void(Result)>;
+  using AbortEvent = std::function<void(std::string)>;
 
   AbstractImagePoller();
   virtual ~AbstractImagePoller();
 
-  virtual void start(ResultEvent event)=0;
+  virtual void start(ResultEvent resultEvent, AbortEvent abortEvent)=0;
   virtual void stop()=0;
 
   virtual QWidget* configure(QWidget* parent)=0;

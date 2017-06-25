@@ -1,5 +1,6 @@
 
 #include "PlaybackController.h"
+#include "FunctionEvent.h"
 #include <QWidget>
 
 PlaybackController::PlaybackController()
@@ -12,15 +13,18 @@ PlaybackController::~PlaybackController()
   stop();
 }
 
-void PlaybackController::setCallback(TimedResultEvent event)
+void PlaybackController::setResultEvent(TimedResultEvent event)
 {
   stop();
-  mEvent = [=](AbstractImagePoller::Result result)
+  mResultEvent = [=](AbstractImagePoller::Result result)
   {
-    auto now = Clock::now();
-    auto frameTime = std::chrono::duration_cast<Duration>(now - mStart);
-    event(TimedResult(result, frameTime));
-    mStart = now;
+    FunctionEvent::post([=]
+                        {
+                          auto now = Clock::now();
+                          auto frameTime = std::chrono::duration_cast<Duration>(now - mStart);
+                          event(TimedResult(result, frameTime));
+                          mStart = now;
+                        });
   };
 }
 
@@ -32,11 +36,11 @@ void PlaybackController::change(std::shared_ptr<AbstractImagePoller> poller)
 
 void PlaybackController::start()
 {
-  if (mStarted || !mPoller || !mEvent)
+  if (mStarted || !mPoller || !mResultEvent || !mAbortEvent)
     return;
 
   mStart = Clock::now();
-  mPoller->start(mEvent);
+  mPoller->start(mResultEvent, mAbortEvent);
   mStarted = true;
 }
 
@@ -60,4 +64,16 @@ void PlaybackController::configure(QWidget* parent)
     return;
   }
   configurationWidget->show();
+}
+
+void PlaybackController::setAbortEvent(PlaybackController::AbortEvent event)
+{
+  mAbortEvent = [this, event](std::string const& message)
+  {
+    FunctionEvent::post([=]
+                        {
+                          mStarted = false;
+                          event(message);
+                        });
+  };
 }

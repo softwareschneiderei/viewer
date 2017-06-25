@@ -26,8 +26,11 @@ public:
   };
 
   using TimedResultEvent = std::function<void(TimedResult)>;
+  using AbortEvent = AbstractImagePoller::AbortEvent;
 
-  void setCallback(TimedResultEvent event);
+  void setResultEvent(TimedResultEvent event);
+  void setAbortEvent(AbortEvent event);
+
   void change(std::shared_ptr<AbstractImagePoller> poller);
   void start();
   void stop();
@@ -35,7 +38,8 @@ public:
 
 private:
   std::shared_ptr<AbstractImagePoller> mPoller;
-  AbstractImagePoller::ResultEvent mEvent;
+  AbstractImagePoller::ResultEvent mResultEvent;
+  AbortEvent mAbortEvent;
   bool mStarted = false;
   Clock::time_point mStart;
 };

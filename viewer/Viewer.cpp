@@ -33,10 +33,17 @@ Viewer::Viewer(QWidget* parent) :
   mImageStatsLabel = new QLabel(this);
   statusBar()->addPermanentWidget(mImageStatsLabel);
 
-  mPlaybackController.setCallback([this](PlaybackController::TimedResult result)
-                                  {
-                                    updateImage(result);
-                                  });
+  mPlaybackController.setResultEvent([this](PlaybackController::TimedResult result)
+                                     {
+                                                             updateImage(result);
+
+                                     });
+
+  mPlaybackController.setAbortEvent([this](std::string const& message)
+                                    {
+                                                            onAborted(message);
+
+                                    });
 }
 
 void Viewer::setupModules()
@@ -107,4 +114,9 @@ void Viewer::onStopCommand()
   {
     QMessageBox::critical(this, "Error stopping camera", e.what());
   }
+}
+
+void Viewer::onAborted(std::string const &message)
+{
+  QMessageBox::critical(this, "Acquisition aborted", message.c_str());
 }
