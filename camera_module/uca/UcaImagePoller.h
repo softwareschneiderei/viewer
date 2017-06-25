@@ -1,9 +1,8 @@
 #pragma once
 
 #include "ThreadedImagePoller.h"
+#include "UcaState.h"
 
-#include <uca/uca-camera.h>
-#include <uca/uca-plugin-manager.h>
 
 class UcaImagePoller : public ThreadedImagePoller
 {
@@ -19,8 +18,7 @@ public:
 
   QWidget* configure(QWidget* parent) override;
 private:
-  UcaPluginManager* mManager;
-  UcaCamera* mCamera;
+  std::shared_ptr<UcaState> mState;
   guint mWidth;
   guint mHeight;
   guint mBits;

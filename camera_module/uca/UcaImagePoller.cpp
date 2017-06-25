@@ -6,14 +6,14 @@
 #include "UcaConfigure.h"
 
 namespace {
-guint bytes_per_pixel (guint bits)
+guint bytesPerPixel(guint bits)
 {
   if (bits==8||bits==16||bits==32)
     return bits / 8;
   throw std::runtime_error("Unsupported bit depth");
 }
 
-void check_error(GError* error, std::string const& context)
+void checkError(GError* error, std::string const &context)
 {
   if (error== nullptr)
     return;
@@ -51,33 +51,19 @@ AbstractImagePoller::Result blitImage(std::vector<std::uint8_t> const& buffer, u
 }
 
 UcaImagePoller::UcaImagePoller(std::string const& name)
+: mState(std::make_shared<UcaState>())
 {
-  GError* error=nullptr;
-  mManager = uca_plugin_manager_new();
-  mCamera = uca_plugin_manager_get_camera(mManager, name.c_str(), &error, NULL);
-
-
-  if (!mCamera || error != nullptr) {
-    auto message = "Couldn't initialize camera " + name;
-
-    if (error)
-    {
-      message += std::string(":") + error->message;
-      g_error_free(error);
-    }
-    throw std::runtime_error(message);
-  }
-
+  mState->setCameraByName(name);
 }
 
 void UcaImagePoller::startAcquisition()
 {
-  g_object_set (G_OBJECT (mCamera),
+  g_object_set (G_OBJECT (mState->getCamera()),
                 "trigger-source",
                 UCA_CAMERA_TRIGGER_SOURCE_AUTO,
                 NULL);
 
-  g_object_get (G_OBJECT (mCamera),
+  g_object_get (G_OBJECT (mState->getCamera()),
                 "roi-width", &mWidth,
                 "roi-height", &mHeight,
                 "sensor-bitdepth", &mBits,
@@ -85,18 +71,18 @@ void UcaImagePoller::startAcquisition()
 
 
   GError* error=nullptr;
-  uca_camera_start_recording(mCamera, &error);
+  uca_camera_start_recording(mState->getCamera(), &error);
 
-  check_error(error, "Error starting camera ");
+  checkError(error, "Error starting camera ");
 
-  mBuffer.resize(bytes_per_pixel(mBits)*mWidth*mHeight);
+  mBuffer.resize(bytesPerPixel(mBits)*mWidth*mHeight);
 }
 
 void UcaImagePoller::poll()
 {
   GError* error=nullptr;
-  uca_camera_grab (mCamera, mBuffer.data(), &error);
-  check_error(error, "Error grabbing image ");
+  uca_camera_grab (mState->getCamera(), mBuffer.data(), &error);
+  checkError(error, "Error grabbing image ");
 
   switch(mBits)
   {
@@ -117,18 +103,16 @@ void UcaImagePoller::poll()
 void UcaImagePoller::stopAcquisition()
 {
   GError* error=nullptr;
-  uca_camera_stop_recording (mCamera, &error);
+  uca_camera_stop_recording (mState->getCamera(), &error);
 
-  check_error(error, "Error stopping camera ");
+  checkError(error, "Error stopping camera ");
 }
 
 UcaImagePoller::~UcaImagePoller()
 {
-  g_object_unref(mCamera);
-  g_object_unref(mManager);
 }
 
 QWidget* UcaImagePoller::configure(QWidget* parent)
 {
-  return new UcaConfigure(mManager, parent);
+  return new UcaConfigure(mState, parent);
 }

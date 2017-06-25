@@ -25,6 +25,8 @@ public:
 private:
   void updateImage(PlaybackController::TimedResult result);
   void setupModules();
+  void onStartCommand();
+  void onStopCommand();
 
   std::unique_ptr<Ui::Viewer> mUi;
   PlaybackController mPlaybackController;

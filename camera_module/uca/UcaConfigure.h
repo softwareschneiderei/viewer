@@ -3,25 +3,27 @@
 #include <QtWidgets/QWidget>
 #include <QtWidgets/QDialog>
 #include <memory>
-#include <uca/uca-plugin-manager.h>
 
 namespace Ui
 {
   class UcaConfigureDialog;
 }
 
+class UcaState;
+
 class UcaConfigure : public QDialog
 {
 public:
-  UcaConfigure(UcaPluginManager* manager, QWidget* parent);
+  UcaConfigure(std::shared_ptr<UcaState> state, QWidget* parent);
   ~UcaConfigure();
 
   void onCameraSelected(QString const& camera);
 
 private:
   std::unique_ptr<Ui::UcaConfigureDialog> mUi;
-  UcaPluginManager* mManager;
+  std::shared_ptr<UcaState> mState;
 
+  void setupTableModel() const;
 };
 
 

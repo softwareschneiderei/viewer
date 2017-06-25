@@ -4,6 +4,7 @@
 #include <QPushButton>
 #include <UcaImagePoller.h>
 #include <QtCore/QSettings>
+#include <QtWidgets/QMessageBox>
 #include "EmulatedImagePoller.h"
 
 Viewer::Viewer(QWidget* parent) :
@@ -22,11 +23,11 @@ Viewer::Viewer(QWidget* parent) :
 
   connect(mUi->play, &QToolButton::clicked, [this]
   {
-    mPlaybackController.start();
+    onStartCommand();
   });
   connect(mUi->stop, &QToolButton::clicked, [this]
   {
-    mPlaybackController.stop();
+    onStopCommand();
   });
 
   mImageStatsLabel = new QLabel(this);
@@ -82,4 +83,28 @@ void Viewer::updateImage(PlaybackController::TimedResult result)
                               .arg(ms, 4, 'f', 1)
                               .arg(fps, 4, 'f', 1)
                               .arg(result.min).arg(result.max));
+}
+
+void Viewer::onStartCommand()
+{
+  try
+  {
+    mPlaybackController.start();
+  }
+  catch(std::exception const& e)
+  {
+    QMessageBox::critical(this, "Error starting camera", e.what());
+  }
+}
+
+void Viewer::onStopCommand()
+{
+  try
+  {
+    mPlaybackController.stop();
+  }
+  catch(std::exception const& e)
+  {
+    QMessageBox::critical(this, "Error stopping camera", e.what());
+  }
 }
