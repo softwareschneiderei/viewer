@@ -15,7 +15,9 @@ add_executable(${TARGET_NAME} WIN32
   FunctionEvent.cpp
   FunctionEvent.h
   DisplayWidget.cpp
-  DisplayWidget.h)
+  DisplayWidget.h
+  PlaybackController.cpp
+  PlaybackController.h)
 
 target_compile_definitions(${TARGET_NAME}
   PUBLIC -DVIEWER_VERSION=${VERSION})

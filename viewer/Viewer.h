@@ -4,6 +4,7 @@
 #include <memory>
 #include "AbstractImagePoller.h"
 #include "CameraModuleFactory.h"
+#include "PlaybackController.h"
 #include <QLabel>
 
 namespace Ui
@@ -24,8 +25,9 @@ public:
 private:
   void updateImage(AbstractImagePoller::Result result);
   void changePoller(std::shared_ptr<AbstractImagePoller> poller);
+
   std::unique_ptr<Ui::Viewer> mUi;
-  std::shared_ptr<AbstractImagePoller> mPoller;
+  PlaybackController mPlaybackController;
   CameraModuleFactory mCameraModuleFactory;
 
   QLabel* mImageStatsLabel;

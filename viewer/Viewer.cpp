@@ -9,11 +9,7 @@ Viewer::Viewer(QWidget* parent) :
   QMainWindow(parent),
   mUi(new Ui::Viewer)
 {
-  //mPoller = std::make_shared<EpicsImagePoller>(device.toStdString(), serial);
-  //mPoller = std::make_shared<EmulatedImagePoller>();
-
   mUi->setupUi(this);
-
 
   for (auto const& moduleName : mCameraModuleFactory.getAvailableModules())
   {
@@ -27,20 +23,19 @@ Viewer::Viewer(QWidget* parent) :
   });
 
   connect(mUi->configure, &QPushButton::clicked, [this]{
-    if (!mPoller)
-    {
-      return;
-    }
-    auto configurationWidget = mPoller->configure(this);
-    if (!configurationWidget)
-    {
-      return;
-    }
-    configurationWidget->show();
+    mPlaybackController.configure(this);
   });
+
+  connect(mUi->play, &QToolButton::clicked, [this] {mPlaybackController.start();});
+  connect(mUi->stop, &QToolButton::clicked, [this] {mPlaybackController.stop();});
 
   mImageStatsLabel = new QLabel(this);
   statusBar()->addPermanentWidget(mImageStatsLabel);
+
+  mPlaybackController.setCallback([this](AbstractImagePoller::Result result)
+  {
+    updateImage(result);
+  });
 }
 
 Viewer::~Viewer()
@@ -50,21 +45,7 @@ Viewer::~Viewer()
 
 void Viewer::changePoller(std::shared_ptr<AbstractImagePoller> poller)
 {
-  if (mPoller)
-  {
-    mPoller->stop();
-  }
-
-  mPoller = poller;
-
-  if (mPoller)
-  {
-    mPoller->start([this](AbstractImagePoller::Result result)
-                   {
-                     updateImage(result);
-                   });
-  }
-
+  mPlaybackController.change(std::move(poller));
 }
 void Viewer::updateImage(AbstractImagePoller::Result result)
 {
