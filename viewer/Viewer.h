@@ -24,7 +24,6 @@ public:
 
 private:
   void updateImage(AbstractImagePoller::Result result);
-  void changePoller(std::shared_ptr<AbstractImagePoller> poller);
 
   std::unique_ptr<Ui::Viewer> mUi;
   PlaybackController mPlaybackController;

@@ -9,14 +9,13 @@ PlaybackController::PlaybackController()
 
 PlaybackController::~PlaybackController()
 {
-
+  stop();
 }
 
 void PlaybackController::setCallback(AbstractImagePoller::ResultEvent event)
 {
   stop();
   mEvent = std::move(event);
-  start();
 }
 
 void PlaybackController::change(std::shared_ptr<AbstractImagePoller> poller)
