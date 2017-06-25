@@ -7,8 +7,9 @@
 #include <QImage>
 
 EpicsImagePoller::EpicsImagePoller(std::string prefix, int serialNumber)
-  : mPrefix(prefix), mSerialNumber(serialNumber)
+: mPrefix(prefix), mSerialNumber(serialNumber)
 {
+  mAutoLeveling = true;
 }
 
 void EpicsImagePoller::startAcquisition()
@@ -23,8 +24,9 @@ void EpicsImagePoller::startAcquisition()
   device.put("CAMERA", 1);
 }
 
-void EpicsImagePoller::poll(bool toneMapping)
+void EpicsImagePoller::poll()
 {
+  auto autoLeveling = mAutoLeveling.load();
   std::this_thread::sleep_for(std::chrono::milliseconds(66));
 
   Channel width_channel(mPrefix + "WIDTH");
@@ -62,7 +64,7 @@ void EpicsImagePoller::poll(bool toneMapping)
 
   auto minMax = std::minmax_element(image.begin(), image.end());
 
-  if (toneMapping)
+  if (autoLeveling)
   {
 
     QImage targetImage(width, height, QImage::Format_RGB32);
@@ -109,5 +111,10 @@ void EpicsImagePoller::stopAcquisition()
 QWidget* EpicsImagePoller::configure(QWidget* parent)
 {
   return nullptr;
+}
+
+void EpicsImagePoller::setAutoLeveling(bool rhs)
+{
+  mAutoLeveling = rhs;
 }
 

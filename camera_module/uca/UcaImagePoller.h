@@ -13,7 +13,7 @@ public:
 
   void startAcquisition() override;
 
-  void poll(bool toneMapping) override;
+  void poll() override;
 
   void stopAcquisition() override;
 

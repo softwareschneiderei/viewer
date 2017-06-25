@@ -41,12 +41,6 @@ Viewer::Viewer(QWidget* parent) :
 
   mImageStatsLabel = new QLabel(this);
   statusBar()->addPermanentWidget(mImageStatsLabel);
-
-  connect(mUi->tonemapping, &QToolButton::clicked, [this](bool checked)
-  {
-    mPoller->setAutoLeveling(checked);
-  });
-
 }
 
 Viewer::~Viewer()

@@ -92,7 +92,7 @@ void UcaImagePoller::startAcquisition()
   mBuffer.resize(bytes_per_pixel(mBits)*mWidth*mHeight);
 }
 
-void UcaImagePoller::poll(bool toneMapping)
+void UcaImagePoller::poll()
 {
   GError* error=nullptr;
   uca_camera_grab (mCamera, mBuffer.data(), &error);

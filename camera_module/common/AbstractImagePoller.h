@@ -21,5 +21,4 @@ public:
   virtual void stop()=0;
 
   virtual QWidget* configure(QWidget* parent)=0;
-  virtual void setAutoLeveling(bool rhs)=0;
 };

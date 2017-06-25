@@ -17,11 +17,9 @@ add_executable(${TARGET_NAME} WIN32
   DisplayWidget.cpp
   DisplayWidget.h)
 
-# Use the Widgets module from Qt 5.
-# qt5_use_modules(${TARGET_NAME} Widgets)
-
 target_compile_definitions(${TARGET_NAME}
   PUBLIC -DVIEWER_VERSION=${VERSION})
+
 target_link_libraries(${TARGET_NAME}
   PUBLIC camera_common
   PUBLIC camera_emulated

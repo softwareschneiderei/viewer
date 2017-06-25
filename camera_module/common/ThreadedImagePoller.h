@@ -11,10 +11,9 @@ public:
 
   void start(ResultEvent event) override;
   void stop() override;
-  void setAutoLeveling(bool rhs) override;
 
   virtual void startAcquisition() = 0;
-  virtual void poll(bool autoLeveling) = 0;
+  virtual void poll() = 0;
   virtual void stopAcquisition() = 0;
 
   void dispatch(Result result);
@@ -25,6 +24,5 @@ private:
   ResultEvent mEvent;
   std::thread mThread;
   std::atomic_bool mKeepRunning{false};
-  std::atomic_bool mAutoLeveling{true};
 };
 

@@ -38,7 +38,7 @@ void ThreadedImagePoller::run()
   {
     try
     {
-      poll(mAutoLeveling);
+      poll();
       continue;
     }
     catch (std::exception const &error)
@@ -55,11 +55,6 @@ void ThreadedImagePoller::run()
   }
 
   stopAcquisition();
-}
-
-void ThreadedImagePoller::setAutoLeveling(bool rhs)
-{
-  mAutoLeveling = rhs;
 }
 
 void ThreadedImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)

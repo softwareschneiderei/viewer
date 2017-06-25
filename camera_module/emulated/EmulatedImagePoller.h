@@ -7,7 +7,7 @@ class EmulatedImagePoller : public ThreadedImagePoller
 {
   void startAcquisition() override;
 
-  void poll(bool autoLeveling) override;
+  void poll() override;
 
   void stopAcquisition() override;
 
