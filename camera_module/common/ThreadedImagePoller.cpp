@@ -5,6 +5,24 @@
 #include <numeric>
 #include <QImage>
 
+namespace
+{
+void logError()
+{
+  try
+  {
+    throw;
+  }
+  catch (std::exception const &error)
+  {
+    std::cerr << "Error: " << error.what() << std::endl;
+  }
+  catch (...)
+  {
+    std::cerr << "Unknown error" << std::endl;
+  }
+}
+}
 ThreadedImagePoller::ThreadedImagePoller()
 {
 }
@@ -32,7 +50,16 @@ void ThreadedImagePoller::stop()
 
 void ThreadedImagePoller::run()
 {
-  startAcquisition();
+  try
+  {
+    startAcquisition();
+  }
+  catch(...)
+  {
+    logError();
+    mKeepRunning = false;
+    return;
+  }
 
   while (mKeepRunning)
   {
@@ -41,20 +68,23 @@ void ThreadedImagePoller::run()
       poll();
       continue;
     }
-    catch (std::exception const &error)
-    {
-      std::cerr << "Error: " << error.what() << std::endl;
-    }
     catch (...)
     {
-      std::cerr << "Unknown error" << std::endl;
+      logError();
     }
 
     // Sleep a while after an error
     std::this_thread::sleep_for(std::chrono::seconds(1));
   }
 
-  stopAcquisition();
+  try
+  {
+    stopAcquisition();
+  }
+  catch(...)
+  {
+    logError();
+  }
 }
 
 void ThreadedImagePoller::dispatch(QImage image, uint16_t min, uint16_t max)
