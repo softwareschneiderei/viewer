@@ -5,6 +5,7 @@
 
 class EmulatedImagePoller : public ThreadedImagePoller
 {
+public:
   void startAcquisition() override;
 
   void poll() override;
@@ -12,6 +13,6 @@ class EmulatedImagePoller : public ThreadedImagePoller
   void stopAcquisition() override;
 
   QWidget* configure(QWidget* parent) override;
-public:
 private:
+  std::default_random_engine mRng;
 };
