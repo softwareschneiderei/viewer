@@ -18,6 +18,7 @@ public:
 
 
 private:
+  UcaCamera* mCamera;
   std::vector<GParamSpec*> mProperties;
 
 };

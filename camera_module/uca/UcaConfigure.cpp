@@ -45,6 +45,7 @@ UcaConfigure::UcaConfigure(UcaPluginManager* manager, QWidget* parent)
   connect(mUi->cameraSelector, static_cast<void(QComboBox::*)(QString const&)>(&QComboBox::activated),
           [=](QString const& camera){ onCameraSelected(camera); });
 
+
 }
 
 UcaConfigure::~UcaConfigure()
@@ -71,4 +72,5 @@ void UcaConfigure::onCameraSelected(QString const& name)
   }
 
   mUi->properties->setModel(new UcaTableModel(camera));
+  mUi->properties->setColumnWidth(0, 200);
 }
