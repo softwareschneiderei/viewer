@@ -23,7 +23,7 @@ public:
   ~Viewer();
 
 private:
-  void updateImage(AbstractImagePoller::Result result);
+  void updateImage(PlaybackController::TimedResult result);
 
   std::unique_ptr<Ui::Viewer> mUi;
   PlaybackController mPlaybackController;

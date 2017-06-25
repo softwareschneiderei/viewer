@@ -12,10 +12,16 @@ PlaybackController::~PlaybackController()
   stop();
 }
 
-void PlaybackController::setCallback(AbstractImagePoller::ResultEvent event)
+void PlaybackController::setCallback(TimedResultEvent event)
 {
   stop();
-  mEvent = std::move(event);
+  mEvent = [=](AbstractImagePoller::Result result)
+  {
+    auto now = Clock::now();
+    auto frameTime = std::chrono::duration_cast<Duration>(now - mStart);
+    event(TimedResult(result, frameTime));
+    mStart = now;
+  };
 }
 
 void PlaybackController::change(std::shared_ptr<AbstractImagePoller> poller)
@@ -29,6 +35,7 @@ void PlaybackController::start()
   if (mStarted || !mPoller || !mEvent)
     return;
 
+  mStart = Clock::now();
   mPoller->start(mEvent);
   mStarted = true;
 }
