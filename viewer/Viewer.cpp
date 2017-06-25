@@ -23,6 +23,7 @@ Viewer::Viewer(QWidget* parent) :
   connect(mUi->module, currentIndexChanged, [this](QString module)
   {
     mPlaybackController.change(mCameraModuleFactory.createModule(module.toStdString()));
+    mUi->display->setImage({});
   });
 
   connect(mUi->configure, &QPushButton::clicked, [this]{
