@@ -1,4 +1,9 @@
 CMakeLists.txt.user
 *.autosave
 cmake-build-debug/
+cmake-build-default/
 cmake-build-release/
+.idea/.name
+.idea/dictionaries/
+.idea/workspace.xml
+
