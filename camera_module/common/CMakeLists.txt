@@ -15,4 +15,4 @@ target_compile_options(${TARGET_NAME}
   PUBLIC -std=c++11)
 
 target_link_libraries(${TARGET_NAME}
-  PUBLIC Qt5::Widgets)
+  PUBLIC Qt5::Widgets pthread)

@@ -10,6 +10,9 @@ guint bytesPerPixel(guint bits)
 {
   if (bits==8||bits==16||bits==32)
     return bits / 8;
+  if (bits==14)
+    return 2;
+
   throw std::runtime_error("Unsupported bit depth");
 }
 
@@ -84,15 +87,15 @@ void UcaImagePoller::poll()
   uca_camera_grab (mState->getCamera(), mBuffer.data(), &error);
   checkError(error, "Error grabbing image:\n");
 
-  switch(mBits)
+  switch(bytesPerPixel(mBits))
   {
-  case 8:
+  case 1:
     dispatch(blitImage<std::uint8_t>(mBuffer, mWidth, mHeight));
     return;
-  case 16:
+  case 2:
     dispatch(blitImage<std::uint16_t>(mBuffer, mWidth, mHeight));
     return;
-  case 32:
+  case 4:
     dispatch(blitImage<std::uint32_t>(mBuffer, mWidth, mHeight));
     return;
   default:

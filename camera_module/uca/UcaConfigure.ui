@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>774</width>
+    <height>530</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,7 +27,21 @@
     </widget>
    </item>
    <item>
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Selected camera:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QComboBox" name="cameraSelector"/>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_2">
+     <property name="text">
+      <string>Properties:</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QScrollArea" name="scrollArea">
@@ -39,8 +53,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>384</width>
-        <height>153</height>
+        <width>754</width>
+        <height>352</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">

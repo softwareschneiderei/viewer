@@ -14,6 +14,7 @@ public:
   UcaPluginManager* getManager();
 
   UcaCamera* getCamera() const;
+  std::string getCameraName() const;
   void setCameraByName(std::string const& cameraName);
 
   UcaCamera* createCameraByName(std::string const& cameraName) const;
@@ -23,7 +24,7 @@ public:
 private:
   UcaPluginManager* mManager=nullptr;
   UcaCamera* mCamera=nullptr;
-
+  std::string mCameraName;
 };
 
 

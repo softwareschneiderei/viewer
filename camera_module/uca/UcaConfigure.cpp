@@ -22,6 +22,8 @@ UcaConfigure::UcaConfigure(std::shared_ptr<UcaState> state, QWidget* parent)
   for (auto const& camera : cameras)
   {
     mUi->cameraSelector->addItem(camera.c_str(), {});
+    if (camera == mState->getCameraName())
+      mUi->cameraSelector->setCurrentIndex(mUi->cameraSelector->count() - 1);
   }
 
   connect(mUi->cameraSelector, static_cast<void(QComboBox::*)(QString const&)>(&QComboBox::activated),

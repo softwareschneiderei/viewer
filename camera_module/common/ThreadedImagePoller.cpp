@@ -23,8 +23,10 @@ void logError()
   }
 }
 }
+
 ThreadedImagePoller::ThreadedImagePoller()
 {
+  stop();
 }
 
 void ThreadedImagePoller::start(ResultEvent resultEvent, AbortEvent abortEvent)
@@ -45,6 +47,9 @@ void ThreadedImagePoller::start(ResultEvent resultEvent, AbortEvent abortEvent)
 
 void ThreadedImagePoller::stop()
 {
+  if (!mThread.joinable())
+    return;
+
   mKeepRunning = false;
   mThread.join();
 }

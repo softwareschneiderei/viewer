@@ -25,6 +25,12 @@ UcaState::UcaState()
 
 UcaState::~UcaState()
 {
+  if (mCamera)
+  {
+    g_object_unref(mCamera);
+    mCamera = nullptr;
+  }
+
   g_object_unref(mManager);
 }
 
@@ -47,6 +53,7 @@ void UcaState::setCameraByName(std::string const& cameraName)
   }
 
   mCamera = createCameraByName(cameraName);
+  mCameraName = cameraName;
 }
 
 UcaCamera* UcaState::createCameraByName(std::string const& cameraName) const
@@ -91,4 +98,10 @@ std::vector<std::string> UcaState::getAvailableCameras() const
   }
 
   return result;
+}
+
+
+std::string UcaState::getCameraName() const
+{
+  return mCameraName;
 }
