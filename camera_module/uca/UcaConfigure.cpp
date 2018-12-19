@@ -29,6 +29,11 @@ UcaConfigure::UcaConfigure(std::shared_ptr<UcaState> state, QWidget* parent)
   connect(mUi->cameraSelector, static_cast<void(QComboBox::*)(QString const&)>(&QComboBox::activated),
           [=](QString const& camera){ onCameraSelected(camera); });
 
+  connect(mUi->autoLevel, &QCheckBox::stateChanged, [this](int state)
+  {
+    mState->setAutoLevel(state != 0);
+  });
+
   setupTableModel();
 }
 

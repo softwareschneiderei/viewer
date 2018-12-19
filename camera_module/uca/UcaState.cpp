@@ -105,3 +105,15 @@ std::string UcaState::getCameraName() const
 {
   return mCameraName;
 }
+
+
+void UcaState::setAutoLevel(bool rhs)
+{
+  mAutoLevel = rhs;
+}
+
+
+bool UcaState::getAutoLevel() const
+{
+  return mAutoLevel;
+}

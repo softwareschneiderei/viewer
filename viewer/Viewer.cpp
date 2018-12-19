@@ -29,6 +29,7 @@ Viewer::Viewer(QWidget* parent) :
   {
     onStopCommand();
   });
+  mUi->stop->setEnabled(false);
 
   mImageStatsLabel = new QLabel(this);
   statusBar()->addPermanentWidget(mImageStatsLabel);
@@ -97,6 +98,9 @@ void Viewer::onStartCommand()
   try
   {
     mPlaybackController.start();
+    mUi->configure->setEnabled(false);
+    mUi->play->setEnabled(false);
+    mUi->stop->setEnabled(true);
   }
   catch(std::exception const& e)
   {
@@ -109,6 +113,9 @@ void Viewer::onStopCommand()
   try
   {
     mPlaybackController.stop();
+    mUi->configure->setEnabled(true);
+    mUi->play->setEnabled(true);
+    mUi->stop->setEnabled(false);
   }
   catch(std::exception const& e)
   {

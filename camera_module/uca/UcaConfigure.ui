@@ -27,6 +27,13 @@
     </widget>
    </item>
    <item>
+    <widget class="QCheckBox" name="autoLevel">
+     <property name="text">
+      <string>Auto Level Intensity</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="label_3">
      <property name="text">
       <string>Selected camera:</string>
@@ -54,7 +61,7 @@
         <x>0</x>
         <y>0</y>
         <width>754</width>
-        <height>352</height>
+        <height>324</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">

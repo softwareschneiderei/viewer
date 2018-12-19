@@ -51,6 +51,56 @@ AbstractImagePoller::Result blitImage(std::vector<std::uint8_t> const& buffer, u
 
   return {targetImage, min, max};
 }
+
+template <typename T>
+AbstractImagePoller::Result blitImageAutoLevel(std::vector<std::uint8_t> const& buffer, unsigned int width, unsigned int height)
+{
+  QImage targetImage(width, height, QImage::Format_RGB32);
+
+  std::uint32_t min = std::numeric_limits<std::uint32_t>::max();
+  std::uint32_t max = std::numeric_limits<std::uint32_t>::min();
+
+  for (int y = 0; y < height; ++y)
+  {
+    auto source = buffer.data() + y * width * sizeof(T);
+    for (int x = 0; x < width; ++x)
+    {
+      T gray;
+      std::memcpy(&gray, source + x*sizeof(T), sizeof(T));
+      min = std::min(min, static_cast<std::uint32_t>(gray));
+      max = std::max(max, static_cast<std::uint32_t>(gray));
+    }
+  }
+
+  if (min != max)
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      auto target = reinterpret_cast<QRgb*>(targetImage.scanLine(y));
+      auto source = buffer.data() + y * width * sizeof(T);
+      for (int x = 0; x < width; ++x)
+      {
+        T gray;
+        std::memcpy(&gray, source + x*sizeof(T), sizeof(T));
+        gray  = (gray - min)*255 / (max - min);
+        target[x] = qRgb(gray, gray, gray);
+      }
+    }
+  }
+  else
+  {
+    for (int y = 0; y < height; ++y)
+    {
+      auto target = reinterpret_cast<QRgb*>(targetImage.scanLine(y));
+      for (int x = 0; x < width; ++x)
+      {
+        target[x] = qRgb(0, 0, 0);
+      }
+    }
+  }
+
+  return {targetImage, min, max};
+}
 }
 
 UcaImagePoller::UcaImagePoller(std::string const& name)
@@ -87,19 +137,39 @@ void UcaImagePoller::poll()
   uca_camera_grab (mState->getCamera(), mBuffer.data(), &error);
   checkError(error, "Error grabbing image:\n");
 
-  switch(bytesPerPixel(mBits))
+  if (mState->getAutoLevel())
   {
-  case 1:
-    dispatch(blitImage<std::uint8_t>(mBuffer, mWidth, mHeight));
-    return;
-  case 2:
-    dispatch(blitImage<std::uint16_t>(mBuffer, mWidth, mHeight));
-    return;
-  case 4:
-    dispatch(blitImage<std::uint32_t>(mBuffer, mWidth, mHeight));
-    return;
-  default:
-    return;
+    switch(bytesPerPixel(mBits))
+    {
+      case 1:
+        dispatch(blitImageAutoLevel<std::uint8_t>(mBuffer, mWidth, mHeight));
+        return;
+      case 2:
+        dispatch(blitImageAutoLevel<std::uint16_t>(mBuffer, mWidth, mHeight));
+        return;
+      case 4:
+        dispatch(blitImageAutoLevel<std::uint32_t>(mBuffer, mWidth, mHeight));
+        return;
+      default:
+        return;
+    }
+  }
+  else
+  {
+    switch(bytesPerPixel(mBits))
+    {
+      case 1:
+        dispatch(blitImage<std::uint8_t>(mBuffer, mWidth, mHeight));
+        return;
+      case 2:
+        dispatch(blitImage<std::uint16_t>(mBuffer, mWidth, mHeight));
+        return;
+      case 4:
+        dispatch(blitImage<std::uint32_t>(mBuffer, mWidth, mHeight));
+        return;
+      default:
+        return;
+    }
   }
 }
 

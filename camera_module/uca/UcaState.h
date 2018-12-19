@@ -21,10 +21,14 @@ public:
 
   std::vector<std::string> getAvailableCameras() const;
 
+  void setAutoLevel(bool rhs);
+  bool getAutoLevel() const;
+
 private:
   UcaPluginManager* mManager=nullptr;
   UcaCamera* mCamera=nullptr;
   std::string mCameraName;
+  bool mAutoLevel=false;
 };
 
 
