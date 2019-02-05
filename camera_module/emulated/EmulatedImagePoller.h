@@ -2,6 +2,7 @@
 #include "ThreadedImagePoller.h"
 #include <thread>
 #include <atomic>
+#include <random>
 
 class EmulatedImagePoller : public ThreadedImagePoller
 {
