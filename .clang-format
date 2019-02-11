@@ -1,0 +1,19 @@
+﻿---
+BasedOnStyle: WebKit
+AllowShortBlocksOnASingleLine: 'false'
+AllowShortCaseLabelsOnASingleLine: 'false'
+AllowShortFunctionsOnASingleLine: None
+AllowShortIfStatementsOnASingleLine: 'false'
+AllowShortLoopsOnASingleLine: 'false'
+BinPackArguments: 'false'
+BinPackParameters: 'false'
+IndentWidth: '2'
+Language: Cpp
+MaxEmptyLinesToKeep: '2'
+NamespaceIndentation: None
+Standard: Cpp11
+TabWidth: '2'
+UseTab: Never
+AccessModifierOffset: '-2'
+ConstructorInitializerIndentWidth: '0'
+...

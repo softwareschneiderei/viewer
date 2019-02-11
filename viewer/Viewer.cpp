@@ -1,32 +1,29 @@
 #include "Viewer.h"
+#include "EmulatedImagePoller.h"
 #include "ui_Viewer.h"
-#include <QToolButton>
 #include <QPushButton>
-#include <UcaImagePoller.h>
+#include <QToolButton>
 #include <QtCore/QSettings>
 #include <QtWidgets/QMessageBox>
-#include "EmulatedImagePoller.h"
+#include <UcaImagePoller.h>
 
-Viewer::Viewer(QWidget* parent) :
-  QMainWindow(parent),
-  mUi(new Ui::Viewer)
+Viewer::Viewer(QWidget* parent)
+: QMainWindow(parent)
+, mUi(new Ui::Viewer)
 {
   mUi->setupUi(this);
 
   setupModules();
 
 
-  connect(mUi->configure, &QPushButton::clicked, [this]
-  {
+  connect(mUi->configure, &QPushButton::clicked, [this] {
     mPlaybackController.configure(this);
   });
 
-  connect(mUi->play, &QToolButton::clicked, [this]
-  {
+  connect(mUi->play, &QToolButton::clicked, [this] {
     onStartCommand();
   });
-  connect(mUi->stop, &QToolButton::clicked, [this]
-  {
+  connect(mUi->stop, &QToolButton::clicked, [this] {
     onStopCommand();
   });
   mUi->stop->setEnabled(false);
@@ -34,17 +31,15 @@ Viewer::Viewer(QWidget* parent) :
   mImageStatsLabel = new QLabel(this);
   statusBar()->addPermanentWidget(mImageStatsLabel);
 
-  mPlaybackController.setResultEvent([this](PlaybackController::TimedResult result)
-                                     {
-                                                             updateImage(result);
+  mPlaybackController.setResultEvent([this](PlaybackController::TimedResult result) {
+    updateImage(result);
 
-                                     });
+  });
 
-  mPlaybackController.setAbortEvent([this](std::string const& message)
-                                    {
-                                                            onAborted(message);
+  mPlaybackController.setAbortEvent([this](std::string const& message) {
+    onAborted(message);
 
-                                    });
+  });
 }
 
 void Viewer::setupModules()
@@ -56,26 +51,22 @@ void Viewer::setupModules()
   QSettings settings;
   auto module = settings.value("camera/module", defaultModule).toString().toStdString();
 
-  for (auto const& moduleName : modules)
-  {
+  for (auto const& moduleName : modules) {
     mUi->module->addItem(moduleName.c_str(), QString(moduleName.c_str()));
 
-    if (moduleName == module)
-    {
-      mUi->module->setCurrentIndex(mUi->module->count()-1);
+    if (moduleName == module) {
+      mUi->module->setCurrentIndex(mUi->module->count() - 1);
     }
   }
   mPlaybackController.change(mCameraModuleFactory.createModule(module));
 
-  auto currentIndexChanged = static_cast<void (QComboBox::*)(QString const &)>(&QComboBox::currentIndexChanged);
-  connect(mUi->module, currentIndexChanged, [this](QString module)
-  {
+  auto currentIndexChanged = static_cast<void (QComboBox::*)(QString const&)>(&QComboBox::currentIndexChanged);
+  connect(mUi->module, currentIndexChanged, [this](QString module) {
     QSettings settings;
     settings.setValue("camera/module", module);
     mPlaybackController.change(mCameraModuleFactory.createModule(module.toStdString()));
     mUi->display->setImage({});
   });
-
 }
 
 Viewer::~Viewer()
@@ -88,42 +79,37 @@ void Viewer::updateImage(PlaybackController::TimedResult result)
   auto ms = result.frameTime.count() * 1000.0;
   mUi->display->setImage(result.image);
   mImageStatsLabel->setText(QString("Frametime: %1 ms, FPS: %2, Min: %3, Max %4")
-                              .arg(ms, 4, 'f', 1)
-                              .arg(fps, 4, 'f', 1)
-                              .arg(result.min).arg(result.max));
+                                .arg(ms, 4, 'f', 1)
+                                .arg(fps, 4, 'f', 1)
+                                .arg(result.min)
+                                .arg(result.max));
 }
 
 void Viewer::onStartCommand()
 {
-  try
-  {
+  try {
     mPlaybackController.start();
     mUi->configure->setEnabled(false);
     mUi->play->setEnabled(false);
     mUi->stop->setEnabled(true);
-  }
-  catch(std::exception const& e)
-  {
+  } catch (std::exception const& e) {
     QMessageBox::critical(this, "Error starting camera", e.what());
   }
 }
 
 void Viewer::onStopCommand()
 {
-  try
-  {
+  try {
     mPlaybackController.stop();
     mUi->configure->setEnabled(true);
     mUi->play->setEnabled(true);
     mUi->stop->setEnabled(false);
-  }
-  catch(std::exception const& e)
-  {
+  } catch (std::exception const& e) {
     QMessageBox::critical(this, "Error stopping camera", e.what());
   }
 }
 
-void Viewer::onAborted(std::string const &message)
+void Viewer::onAborted(std::string const& message)
 {
   QMessageBox::critical(this, "Acquisition aborted", message.c_str());
 }
