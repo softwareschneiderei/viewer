@@ -48,6 +48,9 @@ QVariant UcaTableModel::data(const QModelIndex &index, int role) const
 UcaTableModel::UcaTableModel(UcaCamera* camera)
   : mCamera(camera)
 {
+  if (camera == nullptr)
+    return;
+
   guint propertyCount = 0;
   auto properties = g_object_class_list_properties(G_OBJECT_GET_CLASS(camera), &propertyCount);
 

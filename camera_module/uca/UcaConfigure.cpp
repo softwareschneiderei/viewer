@@ -1,5 +1,7 @@
 
 #include <QtWidgets/QMessageBox>
+#include <QtWidgets/QCheckBox>
+#include <QtWidgets/QComboBox>
 #include "UcaConfigure.h"
 #include "ui_UcaConfigure.h"
 #include "UcaTableModel.h"
@@ -44,6 +46,7 @@ UcaConfigure::~UcaConfigure()
 
 void UcaConfigure::onCameraSelected(QString const& name)
 {
+  mUi->properties->setModel(nullptr);
   try
   {
     mState->setCameraByName(name.toStdString());
@@ -51,7 +54,6 @@ void UcaConfigure::onCameraSelected(QString const& name)
   catch(std::exception const& e)
   {
     QMessageBox::critical(this, "Error selecting uca camera", e.what());
-    return;
   }
 
   setupTableModel();
