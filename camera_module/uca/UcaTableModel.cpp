@@ -114,6 +114,9 @@ bool UcaTableModel::setData(const QModelIndex &index, QVariant const &newValue, 
     case G_TYPE_DOUBLE:
       g_value_set_double(&value, newValue.toDouble(&ok));
       break;
+    case G_TYPE_FLOAT:
+      g_value_set_float(&value, newValue.toFloat(&ok));
+      break;
     case G_TYPE_BOOLEAN:
       g_value_set_boolean(&value, newValue.toBool());
       break;
