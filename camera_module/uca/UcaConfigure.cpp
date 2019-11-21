@@ -28,6 +28,8 @@ UcaConfigure::UcaConfigure(std::shared_ptr<UcaState> state, QWidget* parent)
       mUi->cameraSelector->setCurrentIndex(mUi->cameraSelector->count() - 1);
   }
 
+  mUi->autoLevel->setCheckState(mState->getAutoLevel() ? Qt::Checked : Qt::Unchecked);
+
   connect(mUi->cameraSelector, static_cast<void(QComboBox::*)(QString const&)>(&QComboBox::activated),
           [=](QString const& camera){ onCameraSelected(camera); });
 
