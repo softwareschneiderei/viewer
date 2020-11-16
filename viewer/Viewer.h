@@ -27,6 +27,7 @@ private:
   void setupModules();
   void onStartCommand();
   void onStopCommand();
+  void onTriggerCommand();
   void onAborted(std::string const& message);
 
   std::unique_ptr<Ui::Viewer> mUi;

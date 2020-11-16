@@ -54,3 +54,8 @@ QWidget* EmulatedImagePoller::configure(QWidget* parent)
 {
   return nullptr;
 }
+
+void EmulatedImagePoller::trigger()
+{
+  // sic! do nothing for now
+}

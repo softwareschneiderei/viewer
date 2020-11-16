@@ -33,7 +33,8 @@
          <string>Configure</string>
         </property>
         <property name="icon">
-         <iconset theme="document-properties"/>
+         <iconset theme="document-properties">
+          <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
       </item>
@@ -46,21 +47,42 @@
       </item>
       <item>
        <widget class="QToolButton" name="play">
+        <property name="toolTip">
+         <string>Play</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-start"/>
+         <iconset theme="media-playback-start">
+          <normaloff>.</normaloff>.</iconset>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QToolButton" name="stop">
+        <property name="toolTip">
+         <string>Stop</string>
+        </property>
         <property name="text">
          <string>...</string>
         </property>
         <property name="icon">
-         <iconset theme="media-playback-stop"/>
+         <iconset theme="media-playback-stop">
+          <normaloff>.</normaloff>.</iconset>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="trigger">
+        <property name="toolTip">
+         <string>Trigger</string>
+        </property>
+        <property name="text">
+         <string>...</string>
+        </property>
+        <property name="icon">
+         <iconset theme="media-record"/>
         </property>
        </widget>
       </item>
@@ -90,14 +112,23 @@
          <x>0</x>
          <y>0</y>
          <width>784</width>
-         <height>519</height>
+         <height>513</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <property name="spacing">
          <number>0</number>
         </property>
-        <property name="margin">
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
          <number>0</number>
         </property>
         <item>
@@ -115,7 +146,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>30</height>
+     <height>32</height>
     </rect>
    </property>
   </widget>

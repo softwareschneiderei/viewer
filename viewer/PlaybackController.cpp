@@ -77,3 +77,11 @@ void PlaybackController::setAbortEvent(PlaybackController::AbortEvent event)
                         });
   };
 }
+
+void PlaybackController::trigger()
+{
+  if (!mPoller)
+    return;
+
+  mPoller->trigger();
+}

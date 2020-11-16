@@ -8,10 +8,9 @@ class EmulatedImagePoller : public ThreadedImagePoller
 {
 public:
   void startAcquisition() override;
-
   void poll() override;
-
   void stopAcquisition() override;
+  void trigger() override;
 
   QWidget* configure(QWidget* parent) override;
 private:

@@ -1,6 +1,54 @@
 #include "UcaTableModel.h"
 #include <QDebug>
 
+namespace {
+QString getEnumString(UcaCamera* camera, GParamSpec* parameterSpec)
+{
+  auto enumSpec = G_PARAM_SPEC_ENUM(parameterSpec);
+  auto enumClass = enumSpec->enum_class;
+
+  // Read the value from the object
+  GValue value = {};
+  g_value_init(&value, G_PARAM_SPEC_VALUE_TYPE(parameterSpec));
+  g_object_get_property(G_OBJECT(camera), g_param_spec_get_name(parameterSpec), &value);
+  auto enumValue = g_value_get_enum(&value);
+  g_value_unset(&value);
+
+  for (guint i = 0; i < enumClass->n_values; ++i)
+  {
+    auto const& valueEntry = enumClass->values[i];
+    if (valueEntry.value == enumValue)
+    {
+      return valueEntry.value_name;
+    }
+  }
+  return "";
+}
+
+bool setEnumFromString(UcaCamera* camera, GParamSpec* parameterSpec, QString const& newValue)
+{
+  auto enumSpec = G_PARAM_SPEC_ENUM(parameterSpec);
+  auto enumClass = enumSpec->enum_class;
+  for (guint i = 0; i < enumClass->n_values; ++i)
+  {
+    auto const& valueEntry = enumClass->values[i];
+    if (valueEntry.value_name == newValue)
+    {
+      GValue value = {};
+      g_value_init(&value, G_PARAM_SPEC_VALUE_TYPE(parameterSpec));
+      g_value_set_enum(&value, valueEntry.value);
+
+      g_object_set_property(G_OBJECT (camera), parameterSpec->name, &value);
+      g_value_unset(&value);
+      return true;
+    }
+  }
+
+  return false;
+
+}
+}
+
 QModelIndex UcaTableModel::parent(const QModelIndex &child) const
 {
   return {};
@@ -31,6 +79,10 @@ QVariant UcaTableModel::data(const QModelIndex &index, int role) const
   }
   else if (index.column() == 1)
   {
+    if (G_IS_PARAM_SPEC_ENUM(parameterSpec))
+    {
+      return getEnumString(mCamera, parameterSpec);
+    }
     GValue value = {};
     g_value_init(&value, G_PARAM_SPEC_VALUE_TYPE(parameterSpec));
 
@@ -62,11 +114,7 @@ UcaTableModel::UcaTableModel(UcaCamera* camera)
   g_free(properties);
 }
 
-UcaTableModel::~UcaTableModel()
-{
-
-
-}
+UcaTableModel::~UcaTableModel() = default;
 
 QVariant UcaTableModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
@@ -99,8 +147,22 @@ bool UcaTableModel::setData(const QModelIndex &index, QVariant const &newValue, 
 
     qDebug() << "Edit: " << newValue;
     auto property = mProperties[index.row()];
-    bool ok = true;
 
+    if (G_IS_PARAM_SPEC_ENUM(property))
+    {
+      if (setEnumFromString(mCamera, property, newValue.toString()))
+      {
+        emit(dataChanged(index, index));
+        qDebug() << "Edited enum value";
+      }
+      else
+      {
+        qDebug() << "Unable to edit enum value";
+      }
+      return true;
+    }
+
+    bool ok = true;
     GValue value = {0};
     g_value_init(&value, property->value_type);
     switch (property->value_type)

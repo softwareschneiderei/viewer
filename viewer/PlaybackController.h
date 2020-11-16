@@ -34,6 +34,7 @@ public:
   void change(std::shared_ptr<AbstractImagePoller> poller);
   void start();
   void stop();
+  void trigger();
   void configure(QWidget* parent);
 
 private:

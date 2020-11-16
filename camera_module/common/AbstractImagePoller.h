@@ -21,5 +21,7 @@ public:
   virtual void start(ResultEvent resultEvent, AbortEvent abortEvent)=0;
   virtual void stop()=0;
 
+  virtual void trigger() = 0;
+
   virtual QWidget* configure(QWidget* parent)=0;
 };

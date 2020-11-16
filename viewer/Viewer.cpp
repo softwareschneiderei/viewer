@@ -15,7 +15,6 @@ Viewer::Viewer(QWidget* parent)
 
   setupModules();
 
-
   connect(mUi->configure, &QPushButton::clicked, [this] {
     mPlaybackController.configure(this);
   });
@@ -26,6 +25,9 @@ Viewer::Viewer(QWidget* parent)
   connect(mUi->stop, &QToolButton::clicked, [this] {
     onStopCommand();
   });
+  connect(mUi->trigger, &QToolButton::clicked, [this] {
+    onTriggerCommand();
+  });
   mUi->stop->setEnabled(false);
 
   mImageStatsLabel = new QLabel(this);
@@ -33,14 +35,14 @@ Viewer::Viewer(QWidget* parent)
 
   mPlaybackController.setResultEvent([this](PlaybackController::TimedResult result) {
     updateImage(result);
-
   });
 
   mPlaybackController.setAbortEvent([this](std::string const& message) {
     onAborted(message);
-
   });
 }
+
+Viewer::~Viewer() = default;
 
 void Viewer::setupModules()
 {
@@ -67,10 +69,6 @@ void Viewer::setupModules()
     mPlaybackController.change(mCameraModuleFactory.createModule(module.toStdString()));
     mUi->display->setImage({});
   });
-}
-
-Viewer::~Viewer()
-{
 }
 
 void Viewer::updateImage(PlaybackController::TimedResult result)
@@ -104,6 +102,15 @@ void Viewer::onStopCommand()
     mUi->configure->setEnabled(true);
     mUi->play->setEnabled(true);
     mUi->stop->setEnabled(false);
+  } catch (std::exception const& e) {
+    QMessageBox::critical(this, "Error stopping camera", e.what());
+  }
+}
+
+void Viewer::onTriggerCommand()
+{
+  try {
+    mPlaybackController.trigger();
   } catch (std::exception const& e) {
     QMessageBox::critical(this, "Error stopping camera", e.what());
   }

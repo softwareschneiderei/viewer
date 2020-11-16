@@ -109,12 +109,14 @@ UcaImagePoller::UcaImagePoller(std::string const& name)
   mState->setCameraByName(name);
 }
 
+UcaImagePoller::~UcaImagePoller() = default;
+
 void UcaImagePoller::startAcquisition()
 {
-  g_object_set (G_OBJECT (mState->getCamera()),
+  /*g_object_set (G_OBJECT (mState->getCamera()),
                 "trigger-source",
                 UCA_CAMERA_TRIGGER_SOURCE_AUTO,
-                NULL);
+                NULL);*/
 
   g_object_get (G_OBJECT (mState->getCamera()),
                 "roi-width", &mWidth,
@@ -134,7 +136,7 @@ void UcaImagePoller::startAcquisition()
 void UcaImagePoller::poll()
 {
   GError* error=nullptr;
-  uca_camera_grab (mState->getCamera(), mBuffer.data(), &error);
+  uca_camera_grab(mState->getCamera(), mBuffer.data(), &error);
   checkError(error, "Error grabbing image:\n");
 
   if (mState->getAutoLevel())
@@ -181,11 +183,14 @@ void UcaImagePoller::stopAcquisition()
   checkError(error, "Error stopping camera:\n");
 }
 
-UcaImagePoller::~UcaImagePoller()
-{
-}
-
 QWidget* UcaImagePoller::configure(QWidget* parent)
 {
   return new UcaConfigure(mState, parent);
+}
+
+void UcaImagePoller::trigger()
+{
+  GError* error=nullptr;
+  uca_camera_trigger(mState->getCamera(), &error);
+  checkError(error, "Error triggering camera:\n");
 }
